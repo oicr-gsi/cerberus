@@ -13,15 +13,35 @@ package ca.on.oicr.gsi.cerberus;
  * 
  * @author ibancarz
  */
+
+
+import java.io.IOException;
+import java.util.ArrayList;
+
 public class SimpleMain {
     
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         
-        ProvenanceResult result = new ProvenanceResult("foo", "bar");
+        ProvenanceResult resultFoo = new ProvenanceResult("foo", "bar");
         
-        String output = "Behold the provenance result:\n"+result.toJson();
+        String output = "Behold the provenance result:\n"+resultFoo.toJson();
         
         System.out.println(output);
+        
+        QueryHandler qh = new QueryHandler();
+        
+        ArrayList<ProvenanceResult> results;
+        
+        results = qh.search(null, "Bob");
+        for (ProvenanceResult result : results) { 
+            System.out.println(result.toJson());
+        }
+        
+        results = qh.search("Manitoba", null);
+        for (ProvenanceResult result : results) { 
+            System.out.println(result.toJson());
+        }
+        
         
     }
     
