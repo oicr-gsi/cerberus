@@ -6,9 +6,10 @@
     </head>
     <body>
         <h1>Cerberus: Provenance API Web Service</h1>
-        <form name="Provenance Query" method="post" action="QueryServlet">
-            Name: <input type="text" name="name" /><br/>
-            Owner: <input type="text" name="owner" /><br/>
+        <form name="Provenance Query" method="post" action="WebProvenance">
+            Leave all fields blank for default<br/>
+            Filter name: <input type="text" name="name" /><br/>
+            Filter value: <input type="text" name="value" /><br/>
             HTML output: <input type="checkbox" name="html_output" value="ON" checked /><br/>
             <input type="submit" value="Get records" />
         </form>

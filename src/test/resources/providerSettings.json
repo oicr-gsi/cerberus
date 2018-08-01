@@ -1,0 +1,19 @@
+[ {
+  "type" : "ca.on.oicr.gsi.provenance.SeqwareMetadataLimsMetadataProvenanceProvider",
+  "provider" : "seqware",
+  "providerSettings" : {
+    "SW_METADATA_METHOD" : "webservice",
+    "SW_REST_URL" : "http://localhost:8889/seqware-webservice",
+    "SW_REST_USER" : "admin@admin.com",
+    "SW_REST_PASS" : "admin"
+  }
+}, {
+  "type" : "ca.on.oicr.gsi.provenance.SeqwareMetadataAnalysisProvenanceProvider",
+  "provider" : "seqware",
+  "providerSettings" : {
+    "SW_METADATA_METHOD" : "webservice",
+    "SW_REST_URL" : "http://localhost:8889/seqware-webservice",
+    "SW_REST_USER" : "admin@admin.com",
+    "SW_REST_PASS" : "admin"
+  }
+} ]
