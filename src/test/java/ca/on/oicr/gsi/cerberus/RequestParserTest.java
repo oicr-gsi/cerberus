@@ -27,18 +27,26 @@ import org.junit.Test;
 public class RequestParserTest extends Base {
 
     private static String input;
-    private final Map<FileProvenanceFilter, Set<String>> filters;
+    private final Map<FileProvenanceFilter, Set<String>> filters1;
+    private final Map<FileProvenanceFilter, Set<String>> filters2;
     private ArrayList<Map> providerSettings;
     private final ObjectMapper om;
+    private static final String PROVENANCE_TYPE = "FILE";
+    private static final String PROVENANCE_ACTION = "INC_EXC_FILTERS";
 
     public RequestParserTest() throws IOException {
         om = new ObjectMapper();
         // populate with a simple default filter
-        String name = "processing_status";
-        FileProvenanceFilter fpf = FileProvenanceFilter.valueOf(name);
-        filters = new HashMap();
-        Set<String> values = new HashSet(Arrays.asList("success"));
-        filters.put(fpf, values);
+        String name1 = "processing_status";
+        FileProvenanceFilter fpf1 = FileProvenanceFilter.valueOf(name1);
+        filters1 = new HashMap<>();
+        Set<String> values1 = new HashSet(Arrays.asList("success"));
+        filters1.put(fpf1, values1);
+        String name2 = "study";
+        FileProvenanceFilter fpf2 = FileProvenanceFilter.valueOf(name2);
+        filters2 = new HashMap<>();
+        Set<String> values2 = new HashSet(Arrays.asList("xenomorph"));
+        filters2.put(fpf2, values2);
 
     }
 
@@ -50,10 +58,15 @@ public class RequestParserTest extends Base {
         // construct a Map from scratch instead of converting getTestFilters() output to string
         // the latter will have "processing-status" instead of "processing_status"
         Map inputMap = new HashMap();
-        Map<String, Set<String>> filterStrings = new HashMap<>();
-        filterStrings.put("processing_status", new HashSet(Arrays.asList("success")));
-        inputMap.put("filter_settings", filterStrings);
+        Map<String, Set<String>> filterStrings1 = new HashMap<>();
+        filterStrings1.put("processing_status", new HashSet(Arrays.asList("success")));
+        Map<String, Set<String>> filterStrings2 = new HashMap<>();
+        filterStrings2.put("study", new HashSet(Arrays.asList("xenomorph")));
+        inputMap.put("inc_filter_settings", filterStrings1);
+        inputMap.put("exc_filter_settings", filterStrings2);
         inputMap.put("provider_settings", providerSettings);
+        inputMap.put("provenance_action", PROVENANCE_ACTION);
+        inputMap.put("provenance_type", PROVENANCE_TYPE);
         input = om.writeValueAsString(inputMap);
     }
 
@@ -64,11 +77,19 @@ public class RequestParserTest extends Base {
     }
 
     @Test
-    public void testFilterSettings() throws IOException {
+    public void testExcFilterSettings() throws IOException {
         RequestParser rp = new RequestParser(input);
-        Map<FileProvenanceFilter, Set<String>> filtersOut = rp.getFilters();
+        Map<FileProvenanceFilter, Set<String>> filtersOut = rp.getExcFilters();
         assertNotNull(filtersOut);
-        assertTrue(filtersOut.equals(filters));
+        assertTrue(filtersOut.equals(filters2));
+    }
+    
+    @Test
+    public void testIncFilterSettings() throws IOException {
+        RequestParser rp = new RequestParser(input);
+        Map<FileProvenanceFilter, Set<String>> filtersOut = rp.getIncFilters();
+        assertNotNull(filtersOut);
+        assertTrue(filtersOut.equals(filters1));
     }
 
     @Test
@@ -83,6 +104,20 @@ public class RequestParserTest extends Base {
         JsonNode rootIn = om.readTree(providerSettingsIn);
         JsonNode rootOut = om.readTree(providerSettingsOut);
         assertTrue(rootIn.equals(rootOut));
+    }
+    
+    @Test
+    public void testProvenanceAction() throws IOException {
+        RequestParser rp = new RequestParser(input);
+        String provenanceAction = rp.getProvenanceAction();
+        assertTrue(provenanceAction.equals(PROVENANCE_ACTION));
+    }
+    
+    @Test
+    public void testProvenanceType() throws IOException {
+        RequestParser rp = new RequestParser(input);
+        String provenanceType = rp.getProvenanceType();
+        assertTrue(provenanceType.equals(PROVENANCE_TYPE));
     }
 
 }

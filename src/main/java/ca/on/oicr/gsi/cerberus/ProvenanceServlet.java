@@ -43,11 +43,14 @@ public class ProvenanceServlet extends HttpServlet {
 
         RequestParser rp = new RequestParser(body);
         String providerSettings = rp.getProviderSettings();
-        Map<FileProvenanceFilter, Set<String>> filters = rp.getFilters();
+        String type = rp.getProvenanceType();
+        String action = rp.getProvenanceAction();
+        Map<FileProvenanceFilter, Set<String>> incFilters = rp.getIncFilters();
+        Map<FileProvenanceFilter, Set<String>> excFilters = rp.getExcFilters();
 
         ProvenanceHandler handler = new ProvenanceHandler(providerSettings);
-        String fpJson = handler.getFileProvenanceJson(filters);
-
+        String fpJson = handler.getProvenanceJson(type, action, incFilters, excFilters);
+        
         response.setContentType("application/json;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
             out.println(fpJson);
