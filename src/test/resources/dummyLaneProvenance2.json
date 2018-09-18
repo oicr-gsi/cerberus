@@ -1,0 +1,167 @@
+[ {
+  "sequencerRunName" : "130416_SN1000001_1001_XXXYYYZZZ",
+  "sequencerRunAttributes" : {
+    "geo_instrument_run_id" : [ "101" ],
+    "run_dir" : [ "/oicr/data/archive/h1179/130416_SN7001179_0112_BC0J2CACXX" ]
+  },
+  "sequencerRunPlatformModel" : "ILLUMINA",
+  "laneNumber" : "6",
+  "laneAttributes" : {
+    "geo_lane" : [ "6" ]
+  },
+  "skip" : false,
+  "laneProvenanceId" : "123456",
+  "version" : "f351d723c7ab38ed5ade6c2e46f3d8ddde7106c73dc7c910ebc1ecd795e48181",
+  "lastModified" : {
+    "offset" : {
+      "totalSeconds" : 0,
+      "id" : "Z",
+      "rules" : {
+        "transitions" : [ ],
+        "transitionRules" : [ ],
+        "fixedOffset" : true
+      }
+    },
+    "zone" : {
+      "totalSeconds" : 0,
+      "id" : "Z",
+      "rules" : {
+        "transitions" : [ ],
+        "transitionRules" : [ ],
+        "fixedOffset" : true
+      }
+    },
+    "nano" : 0,
+    "hour" : 3,
+    "minute" : 31,
+    "second" : 19,
+    "year" : 2013,
+    "month" : "APRIL",
+    "dayOfMonth" : 28,
+    "dayOfWeek" : "SUNDAY",
+    "dayOfYear" : 118,
+    "monthValue" : 4,
+    "chronology" : {
+      "calendarType" : "iso8601",
+      "id" : "ISO"
+    }
+  },
+  "createdDate" : {
+    "offset" : {
+      "totalSeconds" : 0,
+      "id" : "Z",
+      "rules" : {
+        "transitions" : [ ],
+        "transitionRules" : [ ],
+        "fixedOffset" : true
+      }
+    },
+    "zone" : {
+      "totalSeconds" : 0,
+      "id" : "Z",
+      "rules" : {
+        "transitions" : [ ],
+        "transitionRules" : [ ],
+        "fixedOffset" : true
+      }
+    },
+    "nano" : 0,
+    "hour" : 12,
+    "minute" : 59,
+    "second" : 25,
+    "year" : 2013,
+    "month" : "APRIL",
+    "dayOfMonth" : 25,
+    "dayOfWeek" : "THURSDAY",
+    "dayOfYear" : 115,
+    "monthValue" : 4,
+    "chronology" : {
+      "calendarType" : "iso8601",
+      "id" : "ISO"
+    }
+  },
+  "provenanceId" : "123456"
+},  {
+  "sequencerRunName" : "130416_SN1000001_1001_XXXYYYZZZ",
+  "sequencerRunAttributes" : {
+    "geo_instrument_run_id" : [ "101" ],
+    "run_dir" : [ "/oicr/data/archive/h1179/130416_SN7001179_0112_BC0J2CACXX" ]
+  },
+  "sequencerRunPlatformModel" : "ILLUMINA",
+  "laneNumber" : "6",
+  "laneAttributes" : {
+    "geo_lane" : [ "6" ]
+  },
+  "skip" : false,
+  "laneProvenanceId" : "123456",
+  "version" : "f351d723c7ab38ed5ade6c2e46f3d8ddde7106c73dc7c910ebc1ecd795e48181",
+  "lastModified" : {
+    "offset" : {
+      "totalSeconds" : 0,
+      "id" : "Z",
+      "rules" : {
+        "transitions" : [ ],
+        "transitionRules" : [ ],
+        "fixedOffset" : true
+      }
+    },
+    "zone" : {
+      "totalSeconds" : 0,
+      "id" : "Z",
+      "rules" : {
+        "transitions" : [ ],
+        "transitionRules" : [ ],
+        "fixedOffset" : true
+      }
+    },
+    "nano" : 0,
+    "hour" : 3,
+    "minute" : 31,
+    "second" : 19,
+    "year" : 2013,
+    "month" : "APRIL",
+    "dayOfMonth" : 28,
+    "dayOfWeek" : "SUNDAY",
+    "dayOfYear" : 118,
+    "monthValue" : 4,
+    "chronology" : {
+      "calendarType" : "iso8601",
+      "id" : "ISO"
+    }
+  },
+  "createdDate" : {
+    "offset" : {
+      "totalSeconds" : 0,
+      "id" : "Z",
+      "rules" : {
+        "transitions" : [ ],
+        "transitionRules" : [ ],
+        "fixedOffset" : true
+      }
+    },
+    "zone" : {
+      "totalSeconds" : 0,
+      "id" : "Z",
+      "rules" : {
+        "transitions" : [ ],
+        "transitionRules" : [ ],
+        "fixedOffset" : true
+      }
+    },
+    "nano" : 0,
+    "hour" : 12,
+    "minute" : 59,
+    "second" : 25,
+    "year" : 2013,
+    "month" : "APRIL",
+    "dayOfMonth" : 25,
+    "dayOfWeek" : "THURSDAY",
+    "dayOfYear" : 115,
+    "monthValue" : 4,
+    "chronology" : {
+      "calendarType" : "iso8601",
+      "id" : "ISO"
+    }
+  },
+  "provenanceId" : "7890"
+}]

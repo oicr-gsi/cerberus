@@ -3,8 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package ca.on.oicr.gsi.cerberus;
+package ca.on.oicr.gsi.cerberus.util;
 
+import ca.on.oicr.gsi.cerberus.Base;
+import ca.on.oicr.gsi.cerberus.util.PostField;
+import ca.on.oicr.gsi.cerberus.util.RequestParser;
 import ca.on.oicr.gsi.provenance.FileProvenanceFilter;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -62,11 +65,11 @@ public class RequestParserTest extends Base {
         filterStrings1.put("processing_status", new HashSet(Arrays.asList("success")));
         Map<String, Set<String>> filterStrings2 = new HashMap<>();
         filterStrings2.put("study", new HashSet(Arrays.asList("xenomorph")));
-        inputMap.put("inc_filter_settings", filterStrings1);
-        inputMap.put("exc_filter_settings", filterStrings2);
-        inputMap.put("provider_settings", providerSettings);
-        inputMap.put("provenance_action", PROVENANCE_ACTION);
-        inputMap.put("provenance_type", PROVENANCE_TYPE);
+        inputMap.put(PostField.INC_FILTER, filterStrings1);
+        inputMap.put(PostField.EXC_FILTER, filterStrings2);
+        inputMap.put(PostField.PROVIDER, providerSettings);
+        inputMap.put(PostField.ACTION, PROVENANCE_ACTION);
+        inputMap.put(PostField.TYPE, PROVENANCE_TYPE);
         input = om.writeValueAsString(inputMap);
     }
 

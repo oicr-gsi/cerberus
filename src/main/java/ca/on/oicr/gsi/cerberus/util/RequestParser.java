@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package ca.on.oicr.gsi.cerberus;
+package ca.on.oicr.gsi.cerberus.util;
 
 import ca.on.oicr.gsi.provenance.FileProvenanceFilter;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -11,7 +11,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -30,7 +29,7 @@ import org.apache.logging.log4j.LogManager;
  *
  * @author ibancarz
  */
-public class RequestParser extends Base {
+public class RequestParser {
 
     private final Logger log = LogManager.getLogger(RequestParser.class);
 
@@ -59,9 +58,9 @@ public class RequestParser extends Base {
         om = new ObjectMapper();
         JsonNode root = om.readTree(body);
         ArrayList<String> missingKeys = new ArrayList<>();
-        for (String key : Arrays.asList(PROVIDER_KEY, INC_FILTER_KEY, EXC_FILTER_KEY, PROVENANCE_TYPE_KEY, PROVENANCE_ACTION_KEY)) {
-            if (!root.has(key)) {
-                missingKeys.add(key);
+        for (PostField key : PostField.values()) {
+            if (!root.has(key.name())) {
+                missingKeys.add(key.name());
             }
         }
         if (!missingKeys.isEmpty()) {
@@ -69,11 +68,11 @@ public class RequestParser extends Base {
             log.fatal(msg);
             throw new IllegalArgumentException(msg);
         }
-        providerNode = root.get(PROVIDER_KEY);
-        incFilterNode = root.get(INC_FILTER_KEY);
-        excFilterNode = root.get(EXC_FILTER_KEY);
-        typeNode = root.get(PROVENANCE_TYPE_KEY);
-        actionNode = root.get(PROVENANCE_ACTION_KEY);
+        providerNode = root.get(PostField.PROVIDER.name());
+        incFilterNode = root.get(PostField.INC_FILTER.name());
+        excFilterNode = root.get(PostField.EXC_FILTER.name());
+        typeNode = root.get(PostField.TYPE.name());
+        actionNode = root.get(PostField.ACTION.name());
     }
 
     /**

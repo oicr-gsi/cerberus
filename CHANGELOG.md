@@ -7,6 +7,19 @@ Unreleased
 - Caching for provenance results
 - Integration tests using "real" databases and web server
 
+
+Version 0.3.0: 2018-09-18
+-------------------------
+
+Added:
+- Streaming I/O for robust handling of large datasets
+- JSON parsing on the fly instead of reading the entire tree at once
+
+Changed:
+- Base class deleted; POST field names moved to the PostField enumeration
+- Moved utility classes into a 'util' subpackage
+
+
 Version 0.2.0: 2018-09-05
 -------------------------
 
@@ -22,6 +35,7 @@ Changed:
 - Client renamed as ProvenanceHttpClilent
 - ProvenanceServlet uses RequestParser to parse 4 fields from JSON: Type, action, inclusion filters, exclusion filters.
 - Type and action must be members of the respective enumerations; filter arguments may be empty.
+
 
 Version 0.1.0: 2018-08-01
 -------------------------

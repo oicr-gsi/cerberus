@@ -20,3 +20,9 @@ Conventions
 - Cerberus has a changelog: See CHANGELOG.md and https://keepachangelog.com/en/1.0.0/
 - Cerberus follows Semantic Versioning: See https://semver.org/
 
+
+Note on Data Size
+-----------------
+
+- Cerberus has been used to download the entire set of file provenance records (~1.8 million as of Sep-2018).
+- JSON output is ~100GB uncompressed, or ~12GB compressed by gzip. Compression is recommended.

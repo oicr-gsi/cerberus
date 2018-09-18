@@ -5,30 +5,42 @@
  */
 package ca.on.oicr.gsi.cerberus;
 
+import ca.on.oicr.gsi.cerberus.util.ProvenanceType;
+import ca.on.oicr.gsi.cerberus.util.ProvenanceAction;
+import ca.on.oicr.gsi.cerberus.model.AnalysisProvenanceFromJSON;
+import ca.on.oicr.gsi.cerberus.model.FileProvenanceFromJSON;
+import ca.on.oicr.gsi.cerberus.model.LaneProvenanceFromJSON;
+import ca.on.oicr.gsi.cerberus.model.SampleProvenanceFromJSON;
 import ca.on.oicr.gsi.provenance.DefaultProvenanceClient;
 import ca.on.oicr.gsi.provenance.FileProvenanceFilter;
+import ca.on.oicr.gsi.provenance.model.AnalysisProvenance;
 import ca.on.oicr.gsi.provenance.model.FileProvenance;
 import ca.on.oicr.gsi.provenance.model.LaneProvenance;
 import ca.on.oicr.gsi.provenance.model.SampleProvenance;
-import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.io.File;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.StringWriter;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import org.apache.commons.io.output.NullOutputStream;
 import org.junit.Test;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.runner.RunWith;
 import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyCollection;
 import static org.mockito.Matchers.anyMap;
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import org.mockito.runners.MockitoJUnitRunner;
@@ -42,22 +54,41 @@ import org.mockito.runners.MockitoJUnitRunner;
 @RunWith(MockitoJUnitRunner.class)
 public class HandlerTest extends Base {
 
+    private static ClassLoader classLoader;
     private String providerSettings;
-    private final ObjectMapper om = mock(ObjectMapper.class);
-    private final HashSet<FileProvenance> dummyAnalysisProvenance;
+    private final HashSet<AnalysisProvenance> dummyAnalysisProvenance;
     private final HashSet<FileProvenance> dummyFileProvenance;
     private final HashSet<LaneProvenance> dummyLaneProvenance;
     private final HashSet<SampleProvenance> dummySampleProvenance;
     private final Map<FileProvenanceFilter, Set<String>> filters;
     private final Map<FileProvenanceFilter, Set<String>> excFilters;
     private final DefaultProvenanceClient dpc = mock(DefaultProvenanceClient.class);
-    private final FileProvenance ap = mock(FileProvenance.class);
-    private final FileProvenance fp = mock(FileProvenance.class);
-    private final LaneProvenance lp = mock(LaneProvenance.class);
-    private final SampleProvenance sp = mock(SampleProvenance.class);
-    private final String dummyJson;
+    private final AnalysisProvenance ap;
+    private final FileProvenance fp;
+    private final LaneProvenance lp;
+    private final SampleProvenance sp;
+    private final ObjectMapper om;
+    private final Map<String, Collection<AnalysisProvenance>> abp;
+    private final Map<String, Collection<LaneProvenance>> lbp;
+    private final Map<String, Collection<SampleProvenance>> sbp;
+    private final Map<String, Map<String, LaneProvenance>> lbpid;
+    private final Map<String, Map<String, SampleProvenance>> sbpid;
 
-    public HandlerTest() throws JsonProcessingException {
+    private static final String DUMMY_PROVIDER = "dummy_provider";
+    private static final String DUMMY_ID = "dummy_id";
+
+    public HandlerTest() throws IOException {
+
+        om = new ObjectMapper();
+        classLoader = getClass().getClassLoader();
+        File apJsonFile = new File(classLoader.getResource("dummyAnalysisProvenance.json").getFile());
+        ap = new AnalysisProvenanceFromJSON(om.readTree(apJsonFile).get(0));
+        File fpJsonFile = new File(classLoader.getResource("dummyFileProvenance.json").getFile());
+        fp = new FileProvenanceFromJSON(om.readTree(fpJsonFile).get(0));
+        File lpJsonFile = new File(classLoader.getResource("dummyLaneProvenance.json").getFile());
+        lp = new LaneProvenanceFromJSON(om.readTree(lpJsonFile).get(0));
+        File spJsonFile = new File(classLoader.getResource("dummySampleProvenance.json").getFile());
+        sp = new SampleProvenanceFromJSON(om.readTree(spJsonFile).get(0));
         dummyAnalysisProvenance = new HashSet<>();
         dummyAnalysisProvenance.add(ap);
         dummyFileProvenance = new HashSet<>();
@@ -83,16 +114,38 @@ public class HandlerTest extends Base {
         FileProvenanceFilter filter5 = FileProvenanceFilter.valueOf("study");
         Set<String> params5 = new HashSet(Arrays.asList("xenomorph"));
         excFilters.put(filter5, params5);
-        when(dpc.getFileProvenance(any(Map.class))).thenReturn(dummyAnalysisProvenance);
-        when(dpc.getFileProvenance()).thenReturn(dummyAnalysisProvenance);
+        when(dpc.getAnalysisProvenance(any(Map.class))).thenReturn(dummyAnalysisProvenance);
+        when(dpc.getAnalysisProvenance()).thenReturn(dummyAnalysisProvenance);
+
+        when(dpc.getFileProvenance(any(Map.class), any(Map.class))).thenReturn(dummyFileProvenance);
         when(dpc.getFileProvenance(any(Map.class))).thenReturn(dummyFileProvenance);
         when(dpc.getFileProvenance()).thenReturn(dummyFileProvenance);
         when(dpc.getLaneProvenance(any(Map.class))).thenReturn(dummyLaneProvenance);
         when(dpc.getLaneProvenance()).thenReturn(dummyLaneProvenance);
         when(dpc.getSampleProvenance(any(Map.class))).thenReturn(dummySampleProvenance);
         when(dpc.getSampleProvenance()).thenReturn(dummySampleProvenance);
-        dummyJson = "[\"foo\",]";
-        when(om.writeValueAsString(anyCollection())).thenReturn(dummyJson);
+
+        abp = new HashMap<>();
+        abp.put(DUMMY_PROVIDER, dummyAnalysisProvenance);
+        when(dpc.getAnalysisProvenanceByProvider(any(Map.class))).thenReturn(abp);
+        lbp = new HashMap<>();
+        lbp.put(DUMMY_PROVIDER, dummyLaneProvenance);
+        when(dpc.getLaneProvenanceByProvider(any(Map.class))).thenReturn(lbp);
+        sbp = new HashMap<>();
+        sbp.put(DUMMY_PROVIDER, dummySampleProvenance);
+        when(dpc.getSampleProvenanceByProvider(any(Map.class))).thenReturn(sbp);
+
+        lbpid = new HashMap<>();
+        Map<String, LaneProvenance> laneTmp = new HashMap<>();
+        laneTmp.put(DUMMY_ID, lp);
+        lbpid.put(DUMMY_PROVIDER, laneTmp);
+        when(dpc.getLaneProvenanceByProviderAndId(any(Map.class))).thenReturn(lbpid);
+        sbpid = new HashMap<>();
+        Map<String, SampleProvenance> sampleTmp = new HashMap<>();
+        sampleTmp.put(DUMMY_ID, sp);
+        sbpid.put(DUMMY_PROVIDER, sampleTmp);
+        when(dpc.getSampleProvenanceByProviderAndId(any(Map.class))).thenReturn(sbpid);
+
     }
 
     @Before
@@ -104,30 +157,30 @@ public class HandlerTest extends Base {
     @Test
     public void constructorTest() throws IOException {
 
-        ProvenanceHandler ph1 = new ProvenanceHandler(providerSettings);
+        OutputStreamWriter writer = new OutputStreamWriter(new NullOutputStream());
+
+        ProvenanceHandler ph1 = new ProvenanceHandler(providerSettings, writer);
         assertNotNull(ph1);
 
-        ProvenanceHandler ph2 = new ProvenanceHandler(providerSettings, dpc, om);
+        ProvenanceHandler ph2 = new ProvenanceHandler(providerSettings, writer, dpc);
         assertNotNull(ph2);
 
     }
 
     @Test
     public void noFilterTest() throws IOException {
-        ProvenanceHandler ph = new ProvenanceHandler(providerSettings, dpc, om);
-        String output;
-        output = ph.getProvenanceJson(ProvenanceType.ANALYSIS.name());
-        assertTrue(dummyJson.equals(output));
-        output = ph.getProvenanceJson(ProvenanceType.FILE.name());
-        assertTrue(dummyJson.equals(output));
-        output = ph.getProvenanceJson(ProvenanceType.LANE.name());
-        assertTrue(dummyJson.equals(output));
-        output = ph.getProvenanceJson(ProvenanceType.SAMPLE.name());
-        assertTrue(dummyJson.equals(output));
+        for (ProvenanceType type : ProvenanceType.values()) {
+            StringWriter writer = new StringWriter();
+            ProvenanceHandler ph = new ProvenanceHandler(providerSettings, writer, dpc);
+            ph.writeProvenanceJson(type.name());
+            JsonNode outNode = om.readTree(writer.toString()).get(0); // output is a 1-element list
+            JsonNode inNode = getInputNode(type);
+            assertTrue(inNode.equals(outNode));
+        }
         // verify method calls on mock object
-        verify(dpc).registerAnalysisProvenanceProvider(anyString(), anyObject());
-        verify(dpc).registerLaneProvenanceProvider(anyString(), anyObject());
-        verify(dpc).registerSampleProvenanceProvider(anyString(), anyObject());
+        verify(dpc, times(4)).registerAnalysisProvenanceProvider(anyString(), anyObject());
+        verify(dpc, times(4)).registerLaneProvenanceProvider(anyString(), anyObject());
+        verify(dpc, times(4)).registerSampleProvenanceProvider(anyString(), anyObject());
         verify(dpc).getAnalysisProvenance();
         verify(dpc).getFileProvenance();
         verify(dpc).getLaneProvenance();
@@ -135,20 +188,19 @@ public class HandlerTest extends Base {
     }
 
     @Test
-    public void incFilterTest() throws IOException {
-        ProvenanceHandler ph = new ProvenanceHandler(providerSettings, dpc, om);
-        String output;
-        output = ph.getProvenanceJson(ProvenanceType.ANALYSIS.name(), ProvenanceAction.INC_FILTERS.name(), filters);
-        assertTrue(dummyJson.equals(output));
-        output = ph.getProvenanceJson(ProvenanceType.FILE.name(), ProvenanceAction.INC_FILTERS.name(), filters);
-        assertTrue(dummyJson.equals(output));
-        output = ph.getProvenanceJson(ProvenanceType.LANE.name(), ProvenanceAction.INC_FILTERS.name(), filters);
-        assertTrue(dummyJson.equals(output));
-        output = ph.getProvenanceJson(ProvenanceType.SAMPLE.name(), ProvenanceAction.INC_FILTERS.name(), filters);
-        assertTrue(dummyJson.equals(output));
-        verify(dpc).registerAnalysisProvenanceProvider(anyString(), anyObject());
-        verify(dpc).registerLaneProvenanceProvider(anyString(), anyObject());
-        verify(dpc).registerSampleProvenanceProvider(anyString(), anyObject());
+    public void incFiltersTest() throws IOException {
+        for (ProvenanceType type : ProvenanceType.values()) {
+            StringWriter writer = new StringWriter();
+            ProvenanceHandler ph = new ProvenanceHandler(providerSettings, writer, dpc);
+            ph.writeProvenanceJson(type.name(), ProvenanceAction.INC_FILTERS.name(), filters);
+            JsonNode outNode = om.readTree(writer.toString()).get(0); // output is a 1-element list
+            JsonNode inNode = getInputNode(type);
+            assertTrue(inNode.equals(outNode));
+        }
+        // verify method calls on mock object
+        verify(dpc, times(4)).registerAnalysisProvenanceProvider(anyString(), anyObject());
+        verify(dpc, times(4)).registerLaneProvenanceProvider(anyString(), anyObject());
+        verify(dpc, times(4)).registerSampleProvenanceProvider(anyString(), anyObject());
         verify(dpc).getAnalysisProvenance(anyMap());
         verify(dpc).getFileProvenance(anyMap());
         verify(dpc).getLaneProvenance(anyMap());
@@ -156,11 +208,16 @@ public class HandlerTest extends Base {
     }
 
     @Test
-    public void incExcFilterTest() throws IOException {
-        ProvenanceHandler ph = new ProvenanceHandler(providerSettings, dpc, om);
-        String output;
-        output = ph.getProvenanceJson(ProvenanceType.FILE.name(), ProvenanceAction.INC_EXC_FILTERS.name(), filters, excFilters);
-        assertTrue(dummyJson.equals(output));
+    public void incExcFiltersTest() throws IOException {
+        ProvenanceType type = ProvenanceType.FILE;
+        StringWriter writer = new StringWriter();
+        ProvenanceHandler ph = new ProvenanceHandler(providerSettings, writer, dpc);
+        ph.writeProvenanceJson(type.name(), ProvenanceAction.INC_EXC_FILTERS.name(), filters, excFilters);
+        JsonNode outNode = om.readTree(writer.toString()).get(0); // output is a 1-element list
+        JsonNode inNode = getInputNode(type);
+        assertTrue(inNode.equals(outNode));
+
+        // verify method calls on mock object
         verify(dpc).registerAnalysisProvenanceProvider(anyString(), anyObject());
         verify(dpc).registerLaneProvenanceProvider(anyString(), anyObject());
         verify(dpc).registerSampleProvenanceProvider(anyString(), anyObject());
@@ -169,17 +226,19 @@ public class HandlerTest extends Base {
 
     @Test
     public void byProviderTest() throws IOException {
-        ProvenanceHandler ph = new ProvenanceHandler(providerSettings, dpc, om);
-        String output;
-        output = ph.getProvenanceJson(ProvenanceType.ANALYSIS.name(), ProvenanceAction.BY_PROVIDER.name(), filters);
-        assertTrue(dummyJson.equals(output));
-        output = ph.getProvenanceJson(ProvenanceType.LANE.name(), ProvenanceAction.BY_PROVIDER.name(), filters);
-        assertTrue(dummyJson.equals(output));
-        output = ph.getProvenanceJson(ProvenanceType.SAMPLE.name(), ProvenanceAction.BY_PROVIDER.name(), filters);
-        assertTrue(dummyJson.equals(output));
-        verify(dpc).registerAnalysisProvenanceProvider(anyString(), anyObject());
-        verify(dpc).registerLaneProvenanceProvider(anyString(), anyObject());
-        verify(dpc).registerSampleProvenanceProvider(anyString(), anyObject());
+        ProvenanceType[] types = {ProvenanceType.ANALYSIS, ProvenanceType.LANE, ProvenanceType.SAMPLE};
+        for (ProvenanceType type : types) {
+            StringWriter writer = new StringWriter();
+            ProvenanceHandler ph = new ProvenanceHandler(providerSettings, writer, dpc);
+            ph.writeProvenanceJson(type.name(), ProvenanceAction.BY_PROVIDER.name(), filters);
+            JsonNode outNode = om.readTree(writer.toString()).get(DUMMY_PROVIDER).get(0);
+            JsonNode inNode = getInputNode(type);
+            assertTrue(inNode.equals(outNode));
+        }
+        // verify method calls on mock object
+        verify(dpc, times(3)).registerAnalysisProvenanceProvider(anyString(), anyObject());
+        verify(dpc, times(3)).registerLaneProvenanceProvider(anyString(), anyObject());
+        verify(dpc, times(3)).registerSampleProvenanceProvider(anyString(), anyObject());
         verify(dpc).getAnalysisProvenanceByProvider(anyMap());
         verify(dpc).getLaneProvenanceByProvider(anyMap());
         verify(dpc).getSampleProvenanceByProvider(anyMap());
@@ -187,109 +246,43 @@ public class HandlerTest extends Base {
 
     @Test
     public void byProviderAndIdTest() throws IOException {
-        ProvenanceHandler ph = new ProvenanceHandler(providerSettings, dpc, om);
-        String output;
-        output = ph.getProvenanceJson(ProvenanceType.LANE.name(), ProvenanceAction.BY_PROVIDER_AND_ID.name(), filters);
-        assertTrue(dummyJson.equals(output));
-        output = ph.getProvenanceJson(ProvenanceType.SAMPLE.name(), ProvenanceAction.BY_PROVIDER_AND_ID.name(), filters);
-        assertTrue(dummyJson.equals(output));
-        verify(dpc).registerAnalysisProvenanceProvider(anyString(), anyObject());
-        verify(dpc).registerLaneProvenanceProvider(anyString(), anyObject());
-        verify(dpc).registerSampleProvenanceProvider(anyString(), anyObject());
+
+        ProvenanceType[] types = {ProvenanceType.LANE, ProvenanceType.SAMPLE};
+        for (ProvenanceType type : types) {
+            StringWriter writer = new StringWriter();
+            ProvenanceHandler ph = new ProvenanceHandler(providerSettings, writer, dpc);
+            ph.writeProvenanceJson(type.name(), ProvenanceAction.BY_PROVIDER_AND_ID.name(), filters);
+            JsonNode outNode = om.readTree(writer.toString()).get(DUMMY_PROVIDER).get(DUMMY_ID);
+            JsonNode inNode = getInputNode(type);
+            assertTrue(inNode.equals(outNode));
+        }
+        // verify method calls on mock object
+        verify(dpc, times(2)).registerAnalysisProvenanceProvider(anyString(), anyObject());
+        verify(dpc, times(2)).registerLaneProvenanceProvider(anyString(), anyObject());
+        verify(dpc, times(2)).registerSampleProvenanceProvider(anyString(), anyObject());
         verify(dpc).getLaneProvenanceByProviderAndId(anyMap());
         verify(dpc).getSampleProvenanceByProviderAndId(anyMap());
+
     }
 
-    @Test
-    public void analysisProvenanceTest() throws IOException {
-        ProvenanceHandler ph = new ProvenanceHandler(providerSettings, dpc, om);
-        String output1 = ph.analysisNoFilter();
-        assertNotNull(output1);
-        String output2 = ph.analysisIncFilters(filters);
-        assertNotNull(output2);
-        String output3 = ph.analysisByProvider(filters);
-        assertNotNull(output3);
-        // verify method calls on mock object
-        verify(dpc).registerAnalysisProvenanceProvider(anyString(), anyObject());
-        verify(dpc).registerLaneProvenanceProvider(anyString(), anyObject());
-        verify(dpc).registerSampleProvenanceProvider(anyString(), anyObject());
-        verify(dpc).getAnalysisProvenance();
-        verify(dpc).getAnalysisProvenance(anyMap());
-        verify(dpc).getAnalysisProvenanceByProvider(anyMap());
-        // check output is expected value from the mock ObjectMapper
-        for (String output : new String[]{ output1, output2, output3 }) {
-            assertTrue(dummyJson.equals(output));
+    private JsonNode getInputNode(ProvenanceType type) {
+        JsonNode inNode;
+        switch (type) {
+            case ANALYSIS:
+                inNode = om.valueToTree(ap);
+                break;
+            case FILE:
+                inNode = om.valueToTree(fp);
+                break;
+            case LANE:
+                inNode = om.valueToTree(lp);
+                break;
+            case SAMPLE:
+                inNode = om.valueToTree(sp);
+                break;
+            default:
+                throw new RuntimeException();
         }
+        return inNode;
     }
-
-    @Test
-    public void fileProvenanceTest() throws IOException {
-        ProvenanceHandler ph = new ProvenanceHandler(providerSettings, dpc, om);
-        String output1 = ph.fileNoFilter();
-        assertNotNull(output1);
-        String output2 = ph.fileIncFilters(filters);
-        assertNotNull(output2);
-        String output3 = ph.fileIncExcFilters(filters, excFilters);
-        assertNotNull(output3);
-        // verify method calls on mock object
-        verify(dpc).registerAnalysisProvenanceProvider(anyString(), anyObject());
-        verify(dpc).registerLaneProvenanceProvider(anyString(), anyObject());
-        verify(dpc).registerSampleProvenanceProvider(anyString(), anyObject());
-        verify(dpc).getFileProvenance(anyMap(), anyMap());
-        verify(dpc).getFileProvenance(anyMap());
-        verify(dpc).getFileProvenance();
-        // check output is expected value from the mock ObjectMapper
-        for (String output : new String[]{ output1, output2, output3 }) {
-            assertTrue(dummyJson.equals(output));
-        }
-    }
-
-    @Test
-    public void getLaneProvenanceTest() throws IOException {
-        ProvenanceHandler ph = new ProvenanceHandler(providerSettings, dpc, om);
-        String output1 = ph.laneNoFilter();
-        assertNotNull(output1);
-        String output2 = ph.laneIncFilters(filters);
-        assertNotNull(output2);
-        String output3 = ph.laneByProvider(filters);
-        assertNotNull(output3);
-        String provenanceOutput4 = ph.laneByProviderAndId(filters);
-        assertNotNull(provenanceOutput4);
-        // verify method calls on mock object
-        verify(dpc).registerAnalysisProvenanceProvider(anyString(), anyObject());
-        verify(dpc).registerLaneProvenanceProvider(anyString(), anyObject());
-        verify(dpc).registerSampleProvenanceProvider(anyString(), anyObject());
-        verify(dpc).getLaneProvenance();
-        verify(dpc).getLaneProvenance(anyMap());
-        verify(dpc).getLaneProvenanceByProvider(anyMap());
-        verify(dpc).getLaneProvenanceByProviderAndId(anyMap());
-        // check output is expected value from the mock ObjectMapper
-        for (String output : new String[]{ output1, output2, output3 }) {
-            assertTrue(dummyJson.equals(output));
-        }
-    }
-
-    @Test
-    public void getSampleProvenanceTest() throws IOException {
-        ProvenanceHandler ph = new ProvenanceHandler(providerSettings, dpc, om);
-        String output1 = ph.sampleNoFilter();
-        assertNotNull(output1);
-        String output2 = ph.sampleIncFilters(filters);
-        assertNotNull(output2);
-        String output3 = ph.sampleByProvider(filters);
-        assertNotNull(output3);
-        String output4 = ph.sampleByProviderAndId(filters);
-        assertNotNull(output4);
-        // verify method calls on mock object
-        verify(dpc).registerAnalysisProvenanceProvider(anyString(), anyObject());
-        verify(dpc).registerLaneProvenanceProvider(anyString(), anyObject());
-        verify(dpc).registerSampleProvenanceProvider(anyString(), anyObject());
-        verify(dpc).getSampleProvenance(anyMap());
-        verify(dpc).getSampleProvenance();
-        // check output is expected value from the mock ObjectMapper
-        for (String output : new String[]{ output1, output2, output3, output4 }) {
-            assertTrue(dummyJson.equals(output));
-        }
-    }
-
 }

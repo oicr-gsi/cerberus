@@ -5,6 +5,8 @@
  */
 package ca.on.oicr.gsi.cerberus;
 
+import ca.on.oicr.gsi.cerberus.util.ProvenanceType;
+import ca.on.oicr.gsi.cerberus.util.ProvenanceAction;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -14,6 +16,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.StatusLine;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -87,11 +90,11 @@ public class ProvenanceHttpClientTest extends Base {
         ArrayList<Map> providerSettings = getTestProviderSettings();
         Map<String, Set<String>> filters1 = new HashMap<>();
         filters1.put("processing_status", new HashSet(Arrays.asList("success")));
-        String response1 = myClient.getProvenanceJson(providerSettings, type); // no filter
+        String response1 = IOUtils.toString(myClient.getProvenanceJson(providerSettings, type)); // no filter
         assertTrue(response1.equals(dummyOutputs.get(0)));
-        String response2 = myClient.getProvenanceJson(providerSettings, type, ProvenanceAction.INC_FILTERS.name(), filters1); 
+        String response2 = IOUtils.toString(myClient.getProvenanceJson(providerSettings, type, ProvenanceAction.INC_FILTERS.name(), filters1)); 
         assertTrue(response2.equals(dummyOutputs.get(1)));
-        String response3 = myClient.getProvenanceJson(providerSettings, type, ProvenanceAction.BY_PROVIDER.name(), filters1);
+        String response3 = IOUtils.toString(myClient.getProvenanceJson(providerSettings, type, ProvenanceAction.BY_PROVIDER.name(), filters1));
         assertTrue(response3.equals(dummyOutputs.get(2)));  
     }
     
@@ -104,11 +107,11 @@ public class ProvenanceHttpClientTest extends Base {
         filters1.put("processing_status", new HashSet(Arrays.asList("success")));
         Map<String, Set<String>> filters2 = new HashMap<>();
         filters2.put("study", new HashSet(Arrays.asList("xenomorph")));
-        String response1 = myClient.getProvenanceJson(providerSettings, type); // no filter
+        String response1 = IOUtils.toString(myClient.getProvenanceJson(providerSettings, type)); // no filter
         assertTrue(response1.equals(dummyOutputs.get(0)));
-        String response2 = myClient.getProvenanceJson(providerSettings, type, ProvenanceAction.INC_FILTERS.name(), filters1); 
+        String response2 = IOUtils.toString(myClient.getProvenanceJson(providerSettings, type, ProvenanceAction.INC_FILTERS.name(), filters1));
         assertTrue(response2.equals(dummyOutputs.get(1)));
-        String response3 = myClient.getProvenanceJson(providerSettings, type, ProvenanceAction.INC_EXC_FILTERS.name(), filters1, filters2);
+        String response3 = IOUtils.toString(myClient.getProvenanceJson(providerSettings, type, ProvenanceAction.INC_EXC_FILTERS.name(), filters1, filters2));
         assertTrue(response3.equals(dummyOutputs.get(2)));    
     }
     
@@ -119,13 +122,13 @@ public class ProvenanceHttpClientTest extends Base {
         ArrayList<Map> providerSettings = getTestProviderSettings();
         Map<String, Set<String>> filters1 = new HashMap<>();
         filters1.put("processing_status", new HashSet(Arrays.asList("success")));
-        String response1 = myClient.getProvenanceJson(providerSettings, type); // no filter
+        String response1 = IOUtils.toString(myClient.getProvenanceJson(providerSettings, type)); // no filter
         assertTrue(response1.equals(dummyOutputs.get(0)));
-        String response2 = myClient.getProvenanceJson(providerSettings, type, ProvenanceAction.INC_FILTERS.name(), filters1); 
+        String response2 = IOUtils.toString(myClient.getProvenanceJson(providerSettings, type, ProvenanceAction.INC_FILTERS.name(), filters1)); 
         assertTrue(response2.equals(dummyOutputs.get(1)));
-        String response3 = myClient.getProvenanceJson(providerSettings, type, ProvenanceAction.BY_PROVIDER.name(), filters1);
+        String response3 = IOUtils.toString(myClient.getProvenanceJson(providerSettings, type, ProvenanceAction.BY_PROVIDER.name(), filters1));
         assertTrue(response3.equals(dummyOutputs.get(2)));
-        String response4 = myClient.getProvenanceJson(providerSettings, type, ProvenanceAction.BY_PROVIDER_AND_ID.name(), filters1);
+        String response4 = IOUtils.toString(myClient.getProvenanceJson(providerSettings, type, ProvenanceAction.BY_PROVIDER_AND_ID.name(), filters1));
         assertTrue(response4.equals(dummyOutputs.get(3)));
     }
     
@@ -136,13 +139,13 @@ public class ProvenanceHttpClientTest extends Base {
         ArrayList<Map> providerSettings = getTestProviderSettings();
         Map<String, Set<String>> filters1 = new HashMap<>();
         filters1.put("processing_status", new HashSet(Arrays.asList("success")));
-        String response1 = myClient.getProvenanceJson(providerSettings, type); // no filter
+        String response1 = IOUtils.toString(myClient.getProvenanceJson(providerSettings, type)); // no filter
         assertTrue(response1.equals(dummyOutputs.get(0)));
-        String response2 = myClient.getProvenanceJson(providerSettings, type, ProvenanceAction.INC_FILTERS.name(), filters1); 
+        String response2 = IOUtils.toString(myClient.getProvenanceJson(providerSettings, type, ProvenanceAction.INC_FILTERS.name(), filters1));
         assertTrue(response2.equals(dummyOutputs.get(1)));
-        String response3 = myClient.getProvenanceJson(providerSettings, type, ProvenanceAction.BY_PROVIDER.name(), filters1);
+        String response3 = IOUtils.toString(myClient.getProvenanceJson(providerSettings, type, ProvenanceAction.BY_PROVIDER.name(), filters1));
         assertTrue(response3.equals(dummyOutputs.get(2)));
-        String response4 = myClient.getProvenanceJson(providerSettings, type, ProvenanceAction.BY_PROVIDER_AND_ID.name(),  filters1);
+        String response4 = IOUtils.toString(myClient.getProvenanceJson(providerSettings, type, ProvenanceAction.BY_PROVIDER_AND_ID.name(),  filters1));
         assertTrue(response4.equals(dummyOutputs.get(3)));
     }
 

@@ -1,0 +1,211 @@
+[ {
+  "studyTitle" : "xenomorph",
+  "studyAttributes" : {
+    "geo_lab_group_id" : [ "1" ]
+  },
+  "rootSampleName" : "xenomorph_0007",
+  "parentSampleName" : "xenomorph_0006_foo_bar:xenomorph_0005_foo_bar",
+  "sampleName" : "xenomorph_0007_foo_bar",
+  "sampleAttributes" : {
+    "geo_external_name" : [ "1001-1" ],
+    "geo_library_source_template_type" : [ "foo" ],
+    "geo_nanodrop_concentration" : [ "101.1" ],
+    "geo_organism" : [ "h_r_gigerii" ],
+    "geo_prep_kit" : [ "FOO_BAR", "None" ],
+    "geo_purpose" : [ "Library" ],
+    "geo_qubit_concentration" : [ "201" ],
+    "geo_run_id_and_position_and_slot" : [ "3001_3_2", "3001_4_2", "3001_5_2", "3001_6_2" ],
+    "geo_str_result" : [ "Pass" ],
+    "geo_template_id" : [ "4001", "4002", "4003", "4004", "4005", "4006" ],
+    "geo_template_type" : [ "Identity", "Illumina PE Library", "Illumina PE Library Seq", "Primary Tumor Tissue", "gDNA" ],
+    "geo_tissue_origin" : [ "foo" ],
+    "geo_tissue_type" : [ "bar" ]
+  },
+  "sequencerRunName" : "120912_SN001_0001_XXXYYYZZZ",
+  "sequencerRunAttributes" : {
+    "geo_instrument_run_id" : [ "3001" ]
+  },
+  "sequencerRunPlatformModel" : "ILLUMINA",
+  "laneNumber" : "6",
+  "laneAttributes" : {
+    "geo_lane" : [ "6" ]
+  },
+  "iusTag" : null,
+  "skip" : false,
+  "sampleProvenanceId" : "100001",
+  "version" : "230d10dec10fa5b9530627348a42d79a7b8ed6041118f1da69e996fb4b603274",
+  "lastModified" : {
+    "offset" : {
+      "totalSeconds" : 0,
+      "id" : "Z",
+      "rules" : {
+        "fixedOffset" : true,
+        "transitions" : [ ],
+        "transitionRules" : [ ]
+      }
+    },
+    "zone" : {
+      "totalSeconds" : 0,
+      "id" : "Z",
+      "rules" : {
+        "fixedOffset" : true,
+        "transitions" : [ ],
+        "transitionRules" : [ ]
+      }
+    },
+    "nano" : 0,
+    "hour" : 2,
+    "minute" : 39,
+    "second" : 16,
+    "year" : 2013,
+    "month" : "MARCH",
+    "dayOfMonth" : 23,
+    "dayOfWeek" : "SATURDAY",
+    "dayOfYear" : 82,
+    "monthValue" : 3,
+    "chronology" : {
+      "calendarType" : "iso8601",
+      "id" : "ISO"
+    }
+  },
+  "createdDate" : {
+    "offset" : {
+      "totalSeconds" : 0,
+      "id" : "Z",
+      "rules" : {
+        "fixedOffset" : true,
+        "transitions" : [ ],
+        "transitionRules" : [ ]
+      }
+    },
+    "zone" : {
+      "totalSeconds" : 0,
+      "id" : "Z",
+      "rules" : {
+        "fixedOffset" : true,
+        "transitions" : [ ],
+        "transitionRules" : [ ]
+      }
+    },
+    "nano" : 0,
+    "hour" : 16,
+    "minute" : 35,
+    "second" : 30,
+    "year" : 2012,
+    "month" : "SEPTEMBER",
+    "dayOfMonth" : 13,
+    "dayOfWeek" : "THURSDAY",
+    "dayOfYear" : 257,
+    "monthValue" : 9,
+    "chronology" : {
+      "calendarType" : "iso8601",
+      "id" : "ISO"
+    }
+  },
+  "provenanceId" : "100001"
+},  {
+  "studyTitle" : "xenomorph",
+  "studyAttributes" : {
+    "geo_lab_group_id" : [ "1" ]
+  },
+  "rootSampleName" : "xenomorph_0007",
+  "parentSampleName" : "xenomorph_0006_foo_bar:xenomorph_0005_foo_bar",
+  "sampleName" : "xenomorph_0007_foo_bar",
+  "sampleAttributes" : {
+    "geo_external_name" : [ "1001-1" ],
+    "geo_library_source_template_type" : [ "foo" ],
+    "geo_nanodrop_concentration" : [ "101.1" ],
+    "geo_organism" : [ "h_r_gigerii" ],
+    "geo_prep_kit" : [ "FOO_BAR", "None" ],
+    "geo_purpose" : [ "Library" ],
+    "geo_qubit_concentration" : [ "201" ],
+    "geo_run_id_and_position_and_slot" : [ "3001_3_2", "3001_4_2", "3001_5_2", "3001_6_2" ],
+    "geo_str_result" : [ "Pass" ],
+    "geo_template_id" : [ "4001", "4002", "4003", "4004", "4005", "4006" ],
+    "geo_template_type" : [ "Identity", "Illumina PE Library", "Illumina PE Library Seq", "Primary Tumor Tissue", "gDNA" ],
+    "geo_tissue_origin" : [ "foo" ],
+    "geo_tissue_type" : [ "bar" ]
+  },
+  "sequencerRunName" : "120912_SN001_0001_XXXYYYZZZ",
+  "sequencerRunAttributes" : {
+    "geo_instrument_run_id" : [ "3001" ]
+  },
+  "sequencerRunPlatformModel" : "ILLUMINA",
+  "laneNumber" : "6",
+  "laneAttributes" : {
+    "geo_lane" : [ "6" ]
+  },
+  "iusTag" : null,
+  "skip" : false,
+  "sampleProvenanceId" : "100001",
+  "version" : "230d10dec10fa5b9530627348a42d79a7b8ed6041118f1da69e996fb4b603274",
+  "lastModified" : {
+    "offset" : {
+      "totalSeconds" : 0,
+      "id" : "Z",
+      "rules" : {
+        "fixedOffset" : true,
+        "transitions" : [ ],
+        "transitionRules" : [ ]
+      }
+    },
+    "zone" : {
+      "totalSeconds" : 0,
+      "id" : "Z",
+      "rules" : {
+        "fixedOffset" : true,
+        "transitions" : [ ],
+        "transitionRules" : [ ]
+      }
+    },
+    "nano" : 0,
+    "hour" : 2,
+    "minute" : 39,
+    "second" : 16,
+    "year" : 2013,
+    "month" : "MARCH",
+    "dayOfMonth" : 23,
+    "dayOfWeek" : "SATURDAY",
+    "dayOfYear" : 82,
+    "monthValue" : 3,
+    "chronology" : {
+      "calendarType" : "iso8601",
+      "id" : "ISO"
+    }
+  },
+  "createdDate" : {
+    "offset" : {
+      "totalSeconds" : 0,
+      "id" : "Z",
+      "rules" : {
+        "fixedOffset" : true,
+        "transitions" : [ ],
+        "transitionRules" : [ ]
+      }
+    },
+    "zone" : {
+      "totalSeconds" : 0,
+      "id" : "Z",
+      "rules" : {
+        "fixedOffset" : true,
+        "transitions" : [ ],
+        "transitionRules" : [ ]
+      }
+    },
+    "nano" : 0,
+    "hour" : 16,
+    "minute" : 35,
+    "second" : 30,
+    "year" : 2012,
+    "month" : "SEPTEMBER",
+    "dayOfMonth" : 13,
+    "dayOfWeek" : "THURSDAY",
+    "dayOfYear" : 257,
+    "monthValue" : 9,
+    "chronology" : {
+      "calendarType" : "iso8601",
+      "id" : "ISO"
+    }
+  },
+  "provenanceId" : "100002"
+}]

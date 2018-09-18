@@ -1,0 +1,199 @@
+[ {
+  "workflowName" : "CASAVA",
+  "workflowVersion" : "1.8.2",
+  "workflowId" : 101,
+  "workflowAttributes" : { },
+  "workflowRunName" : null,
+  "workflowRunStatus" : "completed",
+  "workflowRunId" : 201,
+  "workflowRunAttributes" : { },
+  "workflowRunInputFileIds" : [ ],
+  "processingAlgorithm" : "BCLToFastq",
+  "processingId" : 301,
+  "processingStatus" : "success",
+  "processingAttributes" : { },
+  "fileMetaType" : "chemical/seq-na-fastq-gzip",
+  "fileId" : 401,
+  "filePath" : "/oicr/xenomorph/archive/seqware/seqware_analysis/results/10001_GATCAG_L002_R2_001.fastq.gz",
+  "fileMd5sum" : "2649612c53d4e41436e391fc2e4fd522",
+  "fileSize" : "1200300400",
+  "fileDescription" : "A file output from the GenericMetadataSaver.",
+  "fileAttributes" : { },
+  "skip" : false,
+  "lastModified" : {
+    "offset" : {
+      "totalSeconds" : 0,
+      "id" : "Z",
+      "rules" : {
+        "fixedOffset" : true,
+        "transitions" : [ ],
+        "transitionRules" : [ ]
+      }
+    },
+    "zone" : {
+      "totalSeconds" : 0,
+      "id" : "Z",
+      "rules" : {
+        "fixedOffset" : true,
+        "transitions" : [ ],
+        "transitionRules" : [ ]
+      }
+    },
+    "nano" : 190000000,
+    "hour" : 5,
+    "minute" : 2,
+    "second" : 9,
+    "year" : 2011,
+    "month" : "NOVEMBER",
+    "dayOfMonth" : 5,
+    "dayOfWeek" : "SATURDAY",
+    "dayOfYear" : 309,
+    "monthValue" : 11,
+    "chronology" : {
+      "calendarType" : "iso8601",
+      "id" : "ISO"
+    }
+  },
+  "iusLimsKeys" : [ {
+    "iusSWID" : 501,
+    "limsKey" : {
+      "provider" : "seqware",
+      "id" : "601",
+      "version" : "284cd271d5b1d33ec8f0d63ab1fd5937481c04c1f15c8201df10b114f0e38f0e",
+      "lastModified" : {
+        "offset" : {
+          "totalSeconds" : 0,
+          "id" : "Z",
+          "rules" : {
+            "fixedOffset" : true,
+            "transitions" : [ ],
+            "transitionRules" : [ ]
+          }
+        },
+        "zone" : {
+          "totalSeconds" : 0,
+          "id" : "Z",
+          "rules" : {
+            "fixedOffset" : true,
+            "transitions" : [ ],
+            "transitionRules" : [ ]
+          }
+        },
+        "nano" : 0,
+        "hour" : 23,
+        "minute" : 9,
+        "second" : 19,
+        "year" : 2011,
+        "month" : "NOVEMBER",
+        "dayOfMonth" : 4,
+        "dayOfWeek" : "FRIDAY",
+        "dayOfYear" : 308,
+        "monthValue" : 11,
+        "chronology" : {
+          "calendarType" : "iso8601",
+          "id" : "ISO"
+        }
+      }
+    }
+  } ],
+  "iusAttributes" : { }
+}, {
+  "workflowName" : "CASAVA",
+  "workflowVersion" : "1.8.2",
+  "workflowId" : 101,
+  "workflowAttributes" : { },
+  "workflowRunName" : null,
+  "workflowRunStatus" : "completed",
+  "workflowRunId" : 201,
+  "workflowRunAttributes" : { },
+  "workflowRunInputFileIds" : [ ],
+  "processingAlgorithm" : "BCLToFastq",
+  "processingId" : 301,
+  "processingStatus" : "success",
+  "processingAttributes" : { },
+  "fileMetaType" : "chemical/seq-na-fastq-gzip",
+  "fileId" : 401,
+  "filePath" : "/oicr/xenomorph/archive/seqware/seqware_analysis/results/10001_GATCAG_L002_R2_001.fastq.gz",
+  "fileMd5sum" : "2649612c53d4e41436e391fc2e4fd522",
+  "fileSize" : "1200300400",
+  "fileDescription" : "Another file output from the GenericMetadataSaver.",
+  "fileAttributes" : { },
+  "skip" : false,
+  "lastModified" : {
+    "offset" : {
+      "totalSeconds" : 0,
+      "id" : "Z",
+      "rules" : {
+        "fixedOffset" : true,
+        "transitions" : [ ],
+        "transitionRules" : [ ]
+      }
+    },
+    "zone" : {
+      "totalSeconds" : 0,
+      "id" : "Z",
+      "rules" : {
+        "fixedOffset" : true,
+        "transitions" : [ ],
+        "transitionRules" : [ ]
+      }
+    },
+    "nano" : 190000000,
+    "hour" : 5,
+    "minute" : 2,
+    "second" : 9,
+    "year" : 2011,
+    "month" : "NOVEMBER",
+    "dayOfMonth" : 5,
+    "dayOfWeek" : "SATURDAY",
+    "dayOfYear" : 309,
+    "monthValue" : 11,
+    "chronology" : {
+      "calendarType" : "iso8601",
+      "id" : "ISO"
+    }
+  },
+  "iusLimsKeys" : [ {
+    "iusSWID" : 501,
+    "limsKey" : {
+      "provider" : "seqware",
+      "id" : "601",
+      "version" : "284cd271d5b1d33ec8f0d63ab1fd5937481c04c1f15c8201df10b114f0e38f0e",
+      "lastModified" : {
+        "offset" : {
+          "totalSeconds" : 0,
+          "id" : "Z",
+          "rules" : {
+            "fixedOffset" : true,
+            "transitions" : [ ],
+            "transitionRules" : [ ]
+          }
+        },
+        "zone" : {
+          "totalSeconds" : 0,
+          "id" : "Z",
+          "rules" : {
+            "fixedOffset" : true,
+            "transitions" : [ ],
+            "transitionRules" : [ ]
+          }
+        },
+        "nano" : 0,
+        "hour" : 23,
+        "minute" : 9,
+        "second" : 19,
+        "year" : 2011,
+        "month" : "NOVEMBER",
+        "dayOfMonth" : 4,
+        "dayOfWeek" : "FRIDAY",
+        "dayOfYear" : 308,
+        "monthValue" : 11,
+        "chronology" : {
+          "calendarType" : "iso8601",
+          "id" : "ISO"
+        }
+      }
+    }
+  } ],
+  "iusAttributes" : { }
+}]

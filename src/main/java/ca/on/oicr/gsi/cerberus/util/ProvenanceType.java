@@ -3,14 +3,17 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package ca.on.oicr.gsi.cerberus;
+package ca.on.oicr.gsi.cerberus.util;
 
 /**
- *
+ * Enumeration of the defined provenance types:
+ * ANALYSIS, FILE, LANE, SAMPLE
+ * 
  * @author ibancarz
  */
-public enum ProvenanceAction {
-    
-    NO_FILTER, INC_FILTERS, INC_EXC_FILTERS, BY_PROVIDER, BY_PROVIDER_AND_ID;
-    
-}
+public enum ProvenanceType {
+        
+        ANALYSIS, FILE, LANE, SAMPLE;
+        
+    }
+

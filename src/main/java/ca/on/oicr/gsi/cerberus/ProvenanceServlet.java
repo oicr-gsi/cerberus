@@ -5,9 +5,11 @@
  */
 package ca.on.oicr.gsi.cerberus;
 
+import ca.on.oicr.gsi.cerberus.util.RequestParser;
 import ca.on.oicr.gsi.provenance.FileProvenanceFilter;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.Map;
 import java.util.Set;
 import javax.servlet.ServletException;
@@ -38,7 +40,7 @@ public class ProvenanceServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        java.io.BufferedReader reqReader = request.getReader();
+        BufferedReader reqReader = request.getReader();
         String body = IOUtils.toString(reqReader);
 
         RequestParser rp = new RequestParser(body);
@@ -48,13 +50,10 @@ public class ProvenanceServlet extends HttpServlet {
         Map<FileProvenanceFilter, Set<String>> incFilters = rp.getIncFilters();
         Map<FileProvenanceFilter, Set<String>> excFilters = rp.getExcFilters();
 
-        ProvenanceHandler handler = new ProvenanceHandler(providerSettings);
-        String fpJson = handler.getProvenanceJson(type, action, incFilters, excFilters);
-        
         response.setContentType("application/json;charset=UTF-8");
-        try (PrintWriter out = response.getWriter()) {
-            out.println(fpJson);
-        }
+        BufferedWriter writer = new BufferedWriter(response.getWriter());
+        ProvenanceHandler handler = new ProvenanceHandler(providerSettings, writer);
+        handler.writeProvenanceJson(type, action, incFilters, excFilters);
 
     }
 

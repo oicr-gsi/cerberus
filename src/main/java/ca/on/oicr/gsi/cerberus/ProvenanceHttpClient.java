@@ -5,6 +5,8 @@
  */
 package ca.on.oicr.gsi.cerberus;
 
+import ca.on.oicr.gsi.cerberus.util.PostField;
+import ca.on.oicr.gsi.cerberus.util.ProvenanceAction;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.io.InputStream;
@@ -14,7 +16,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import javax.xml.ws.http.HTTPException;
-import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpPost;
@@ -39,7 +40,7 @@ import org.apache.logging.log4j.LogManager;
  *
  * @author ibancarz
  */
-public class ProvenanceHttpClient extends Base {
+public class ProvenanceHttpClient {
 
     private final CloseableHttpClient httpClient;
     private final HttpPost httpPost;
@@ -88,11 +89,11 @@ public class ProvenanceHttpClient extends Base {
      * @param incFilterSettings
      * @param excFilterSettings
      *
-     * @return fp, a JSON string containing file provenance data
+     * @return fp, InputStream containing file provenance data
      * @throws java.io.IOException
      * @throws javax.xml.ws.http.HTTPException
      */
-    public String getProvenanceJson(
+    public InputStream getProvenanceJson(
             ArrayList<Map> providerSettings,
             String provenanceType,
             String provenanceAction,
@@ -102,11 +103,11 @@ public class ProvenanceHttpClient extends Base {
 
         // encode settings as json
         Map allSettings = new HashMap();
-        allSettings.put(PROVIDER_KEY, providerSettings);
-        allSettings.put(PROVENANCE_ACTION_KEY, provenanceAction);
-        allSettings.put(PROVENANCE_TYPE_KEY, provenanceType);
-        allSettings.put(INC_FILTER_KEY, incFilterSettings);
-        allSettings.put(EXC_FILTER_KEY, excFilterSettings);
+        allSettings.put(PostField.PROVIDER, providerSettings);
+        allSettings.put(PostField.ACTION, provenanceAction);
+        allSettings.put(PostField.TYPE, provenanceType);
+        allSettings.put(PostField.INC_FILTER, incFilterSettings);
+        allSettings.put(PostField.EXC_FILTER, excFilterSettings);
         String body = om.writeValueAsString(allSettings);
         log.info("HTTP message body: " + body);
 
@@ -128,16 +129,11 @@ public class ProvenanceHttpClient extends Base {
         }
         log.debug("HTTP status is OK");
 
-        // TODO return the InputStream instead?
-        // More efficient/flexible if returning a large amount of data?
         HttpEntity entity = response.getEntity();
-        InputStream stream1 = entity.getContent();
-        String pJson = IOUtils.toString(stream1);
-        log.debug("Found content of HTTP response, length " + Integer.toString(pJson.length()));
-        return pJson;
+        return entity.getContent();
     }
 
-    public String getProvenanceJson(
+    public InputStream getProvenanceJson(
             ArrayList<Map> providerSettings,
             String provenanceType,
             String provenanceAction,
@@ -148,7 +144,7 @@ public class ProvenanceHttpClient extends Base {
         return getProvenanceJson(providerSettings, provenanceType, provenanceAction, incFilterSettings, excFilterSettings);
     }
 
-    public String getProvenanceJson(
+    public InputStream getProvenanceJson(
             ArrayList<Map> providerSettings,
             String provenanceType)
             throws IOException, HTTPException {

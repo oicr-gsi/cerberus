@@ -3,17 +3,16 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package ca.on.oicr.gsi.cerberus;
+package ca.on.oicr.gsi.cerberus.util;
 
 /**
- * Enumeration of the defined provenance types:
- * ANALYSIS, FILE, LANE, SAMPLE
+ *
+ * Denotes fields in the JSON body of the HTTP POST requesting provenance data
  * 
  * @author ibancarz
  */
-public enum ProvenanceType {
-        
-        ANALYSIS, FILE, LANE, SAMPLE;
-        
-    }
-
+public enum PostField {
+    
+    PROVIDER, INC_FILTER, EXC_FILTER, ACTION, TYPE;
+    
+}
