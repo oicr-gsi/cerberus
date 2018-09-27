@@ -18,6 +18,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.io.IOUtils;
+import static org.apache.commons.lang.exception.ExceptionUtils.getStackTrace;
 
 /**
  *
@@ -52,8 +53,13 @@ public class ProvenanceServlet extends HttpServlet {
 
         response.setContentType("application/json;charset=UTF-8");
         BufferedWriter writer = new BufferedWriter(response.getWriter());
-        ProvenanceHandler handler = new ProvenanceHandler(providerSettings, writer);
-        handler.writeProvenanceJson(type, action, incFilters, excFilters);
+        try {
+            ProvenanceHandler handler = new ProvenanceHandler(providerSettings, writer);
+            handler.writeProvenanceJson(type, action, incFilters, excFilters);
+        } catch (Exception e) {
+            String message = "<p>"+e.getMessage()+"</p>\n<p>"+getStackTrace(e)+"</p>\n";
+            response.sendError(500, message);
+        }
 
     }
 

@@ -22,6 +22,7 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
+import org.apache.http.util.EntityUtils;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 
@@ -125,6 +126,9 @@ public class ProvenanceHttpClient {
 
         if (status != 200) {
             log.error("HTTP error status: " + Integer.toString(status));
+            log.error("HTTP response content follows:");
+            String content = EntityUtils.toString(response.getEntity());
+            log.error(content);
             throw new HTTPException(status);
         }
         log.debug("HTTP status is OK");
