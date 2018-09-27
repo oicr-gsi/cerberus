@@ -6,6 +6,15 @@ Unreleased
 
 - Caching for provenance results
 - Integration tests using "real" databases and web server
+- Improved documentation and argument checking for CLI
+
+
+Version 0.3.1: 2018-09-27
+-------------------------
+
+Added:
+- Simple command-line interface: Cerberus.java
+- Error handling in the HTTP servlet; errors reported in HTTP response
 
 
 Version 0.3.0: 2018-09-18
