@@ -5,17 +5,24 @@
  */
 package ca.on.oicr.gsi.cerberus;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamWriter;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import ca.on.oicr.gsi.status.BasePage;
 
 /**
  *
@@ -54,23 +61,25 @@ public class WebProvenanceServlet extends HttpServlet {
         ObjectMapper om = new ObjectMapper();
         String filterJson = om.writeValueAsString(filters);
 
-        try (PrintWriter out = response.getWriter()) {
-            response.setContentType("text/html;charset=UTF-8");
+        try (OutputStream out = response.getOutputStream()) {
             if (htmlOutput) {
-                out.println("<!DOCTYPE html>");
-                out.println("<html>");
-                out.println("<head>");
-                out.println("<title>WebProvenance</title>");
-                out.println("</head>");
-                out.println("<body>");
-                out.println("<h1>Servlet WebProvenanceServlet at " + request.getContextPath() + "</h1>");
-                out.println("<h2>Input filter parameters:</h2>");
-                out.println(filterJson);
-                out.println("</body>");
-                out.println("</html>");
+                response.setContentType("text/html;charset=UTF-8");
+                new BasePage(StatusServlet.SERVER_CONFIG) {
+					
+					@Override
+					protected void renderContent(XMLStreamWriter writer) throws XMLStreamException {
+						writer.writeStartElement("h1");
+						writer.writeCharacters("Input filter parameters");
+						writer.writeEndElement();
+						writer.writeStartElement("pre");
+						writer.writeCharacters(filterJson);
+						writer.writeEndElement();
+						
+					}
+				}.renderPage(out);
             } else {
                 response.setContentType("application/json;charset=UTF-8");
-                out.println(filterJson);
+                out.write(filterJson.getBytes(StandardCharsets.UTF_8));
             }
         }
 
