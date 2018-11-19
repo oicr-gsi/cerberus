@@ -11,7 +11,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -85,7 +84,6 @@ public class ProvenanceHttpClient {
      * Get provenance for specified providers, filters, and type
      *
      * @param provenanceType, String: One of ANALYSIS, FILE, LANE, SAMPLE
-     * @param providerSettings, list of parameters for each Provider
      * @param provenanceAction
      * @param incFilterSettings
      * @param excFilterSettings
@@ -95,7 +93,6 @@ public class ProvenanceHttpClient {
      * @throws javax.xml.ws.http.HTTPException
      */
     public InputStream getProvenanceJson(
-            ArrayList<Map> providerSettings,
             String provenanceType,
             String provenanceAction,
             Map<String, Set<String>> incFilterSettings,
@@ -104,7 +101,6 @@ public class ProvenanceHttpClient {
 
         // encode settings as json
         Map allSettings = new HashMap();
-        allSettings.put(PostField.PROVIDER, providerSettings);
         allSettings.put(PostField.ACTION, provenanceAction);
         allSettings.put(PostField.TYPE, provenanceType);
         allSettings.put(PostField.INC_FILTER, incFilterSettings);
@@ -138,24 +134,22 @@ public class ProvenanceHttpClient {
     }
 
     public InputStream getProvenanceJson(
-            ArrayList<Map> providerSettings,
             String provenanceType,
             String provenanceAction,
             Map<String, Set<String>> incFilterSettings)
             throws IOException, HTTPException {
 
         Map<String, Set<String>> excFilterSettings = new HashMap<>();
-        return getProvenanceJson(providerSettings, provenanceType, provenanceAction, incFilterSettings, excFilterSettings);
+        return getProvenanceJson(provenanceType, provenanceAction, incFilterSettings, excFilterSettings);
     }
 
     public InputStream getProvenanceJson(
-            ArrayList<Map> providerSettings,
             String provenanceType)
             throws IOException, HTTPException {
 
         String provenanceAction = ProvenanceAction.NO_FILTER.name();
         Map<String, Set<String>> incFilterSettings = new HashMap<>();
-        return getProvenanceJson(providerSettings, provenanceType, provenanceAction, incFilterSettings);
+        return getProvenanceJson(provenanceType, provenanceAction, incFilterSettings);
     }
 
 }

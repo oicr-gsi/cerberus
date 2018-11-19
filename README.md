@@ -13,6 +13,13 @@ Goals of Cerberus
 - Improved speed and efficiency, eg. by caching
 - Allow provenance data to be consumed in non-Java languages
 
+Configuration
+-------------
+
+The Cerberus server requires a provenance provider settings JSON file. It is in the format defined by the `ProviderLoader` class in the `oicr-gsi/pipedev` repository.
+
+Because this file contains database credentials, it is kept on the server instead of being supplied by the client. The location defaults to `/etc/tomcat/cerberus/providerSettings.json` and may be changed by editing `src/main/webapp/WEB-INF/web.xml`.
+
 
 Conventions
 -----------

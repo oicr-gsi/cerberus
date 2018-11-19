@@ -45,22 +45,18 @@ import org.apache.logging.log4j.LogManager;
 public class CerberusClient implements ExtendedProvenanceClient {
 
     private final ProvenanceHttpClient phc;
-    private final ArrayList<Map> providerSettings;
     private final Logger log = LogManager.getLogger(CerberusClient.class);
 
-    public CerberusClient(ArrayList<Map> providerSettings, URI uri) {
+    public CerberusClient(URI uri) {
         phc = new ProvenanceHttpClient(uri);
-        this.providerSettings = providerSettings;
     }
 
-    public CerberusClient(ArrayList<Map> providerSettings, CloseableHttpClient httpClient, HttpPost httpPost) {
+    public CerberusClient(CloseableHttpClient httpClient, HttpPost httpPost) {
         phc = new ProvenanceHttpClient(httpClient, httpPost);
-        this.providerSettings = providerSettings;
     }
 
-    public CerberusClient(ArrayList<Map> providerSettings, ProvenanceHttpClient phc) {
+    public CerberusClient(ProvenanceHttpClient phc) {
         this.phc = phc;
-        this.providerSettings = providerSettings;
     }
 
     public Collection<AnalysisProvenance> getAnalysisProvenance() {
@@ -68,7 +64,7 @@ public class CerberusClient implements ExtendedProvenanceClient {
         Collection<AnalysisProvenance> coll = new ArrayList<>();
         try {
             log.debug("Getting provenance type " + type + ", no filters");
-            InputStream jsonStream = phc.getProvenanceJson(providerSettings, type);
+            InputStream jsonStream = phc.getProvenanceJson(type);
             CollectionReader reader = new CollectionReader(jsonStream);
             AnalysisProvenance ap = reader.nextAnalysisProvenance();
             while (ap != null) {
@@ -87,7 +83,7 @@ public class CerberusClient implements ExtendedProvenanceClient {
         Collection<AnalysisProvenance> coll = new ArrayList<>();
         try {
             log.debug("Getting provenance type " + type + ", action " + action);
-            InputStream jsonStream = phc.getProvenanceJson(providerSettings, type, action, filtersToStrings(filters));
+            InputStream jsonStream = phc.getProvenanceJson(type, action, filtersToStrings(filters));
             CollectionReader reader = new CollectionReader(jsonStream);
             AnalysisProvenance ap = reader.nextAnalysisProvenance();
             while (ap != null) {
@@ -107,7 +103,7 @@ public class CerberusClient implements ExtendedProvenanceClient {
         Map<String, Collection<AnalysisProvenance>> map = new HashMap<>();
         try {
             log.debug("Getting provenance type " + type + ", action " + action);
-            InputStream jsonStream = phc.getProvenanceJson(providerSettings, type, action, filtersToStrings(filters));
+            InputStream jsonStream = phc.getProvenanceJson(type, action, filtersToStrings(filters));
             map = new MapOfCollectionsReader(jsonStream).readAnalysis();
         } catch (IOException e) {
             throw new UncheckedIOException(e);
@@ -121,7 +117,7 @@ public class CerberusClient implements ExtendedProvenanceClient {
         Collection<FileProvenance> coll = new ArrayList<>();
         try {
             log.debug("Getting provenance type " + type + ", no filters");
-            InputStream jsonStream = phc.getProvenanceJson(providerSettings, type);
+            InputStream jsonStream = phc.getProvenanceJson(type);
             CollectionReader reader = new CollectionReader(jsonStream);
             FileProvenance fp = reader.nextFileProvenance();
             while (fp != null) {
@@ -141,7 +137,7 @@ public class CerberusClient implements ExtendedProvenanceClient {
         Collection<FileProvenance> coll = new ArrayList<>();
         try {
             log.debug("Getting provenance type " + type + ", action " + action);
-            InputStream jsonStream = phc.getProvenanceJson(providerSettings, type, action, filtersToStrings(filters));
+            InputStream jsonStream = phc.getProvenanceJson(type, action, filtersToStrings(filters));
             CollectionReader reader = new CollectionReader(jsonStream);
             FileProvenance fp = reader.nextFileProvenance();
             while (fp != null) {
@@ -161,7 +157,7 @@ public class CerberusClient implements ExtendedProvenanceClient {
         Collection<FileProvenance> coll = new ArrayList<>();
         try {
             log.debug("Getting provenance type " + type + ", action " + action);
-            InputStream jsonStream = phc.getProvenanceJson(providerSettings, type, action, filtersToStrings(incFilters), filtersToStrings(excFilters));
+            InputStream jsonStream = phc.getProvenanceJson(type, action, filtersToStrings(incFilters), filtersToStrings(excFilters));
             CollectionReader reader = new CollectionReader(jsonStream);
             FileProvenance fp = reader.nextFileProvenance();
             while (fp != null) {
@@ -180,7 +176,7 @@ public class CerberusClient implements ExtendedProvenanceClient {
         Collection<LaneProvenance> coll = new ArrayList<>();
         try {
             log.debug("Getting provenance type " + type + ", no filters");
-            InputStream jsonStream = phc.getProvenanceJson(providerSettings, type);
+            InputStream jsonStream = phc.getProvenanceJson(type);
             CollectionReader reader = new CollectionReader(jsonStream);
             LaneProvenance lp = reader.nextLaneProvenance();
             while (lp != null) {
@@ -200,7 +196,7 @@ public class CerberusClient implements ExtendedProvenanceClient {
         Collection<LaneProvenance> coll = new ArrayList<>();
         try {
             log.debug("Getting provenance type " + type + ", action " + action);
-            InputStream jsonStream = phc.getProvenanceJson(providerSettings, type, action, filtersToStrings(filters));
+            InputStream jsonStream = phc.getProvenanceJson(type, action, filtersToStrings(filters));
             CollectionReader reader = new CollectionReader(jsonStream);
             LaneProvenance lp = reader.nextLaneProvenance();
             while (lp != null) {
@@ -220,7 +216,7 @@ public class CerberusClient implements ExtendedProvenanceClient {
         Map<String, Collection<LaneProvenance>> map = new HashMap<>();
         try {
             log.debug("Getting provenance type " + type + ", action " + action);
-            InputStream jsonStream = phc.getProvenanceJson(providerSettings, type, action, filtersToStrings(filters));
+            InputStream jsonStream = phc.getProvenanceJson(type, action, filtersToStrings(filters));
             map = new MapOfCollectionsReader(jsonStream).readLane();
         } catch (IOException e) {
             throw new UncheckedIOException(e);
@@ -235,7 +231,7 @@ public class CerberusClient implements ExtendedProvenanceClient {
         Map<String, Map<String, LaneProvenance>> map = new HashMap<>();
         try {
             log.debug("Getting provenance type " + type + ", action " + action);
-            InputStream jsonStream = phc.getProvenanceJson(providerSettings, type, action, filtersToStrings(filters));
+            InputStream jsonStream = phc.getProvenanceJson(type, action, filtersToStrings(filters));
             map = new MapOfMapsReader(jsonStream).readLane();
         } catch (IOException e) {
             throw new UncheckedIOException(e);
@@ -249,7 +245,7 @@ public class CerberusClient implements ExtendedProvenanceClient {
         Collection<SampleProvenance> coll = new ArrayList<>();
         try {
             log.debug("Getting provenance type " + type + ", no filters");
-            InputStream jsonStream = phc.getProvenanceJson(providerSettings, type);
+            InputStream jsonStream = phc.getProvenanceJson(type);
             CollectionReader reader = new CollectionReader(jsonStream);
             SampleProvenance sp = reader.nextSampleProvenance();
             while (sp != null) {
@@ -269,7 +265,7 @@ public class CerberusClient implements ExtendedProvenanceClient {
         Collection<SampleProvenance> coll = new ArrayList<>();
         try {
             log.debug("Getting provenance type " + type + ", action " + action);
-            InputStream jsonStream = phc.getProvenanceJson(providerSettings, type, action, filtersToStrings(filters));
+            InputStream jsonStream = phc.getProvenanceJson(type, action, filtersToStrings(filters));
             CollectionReader reader = new CollectionReader(jsonStream);
             SampleProvenance sp = reader.nextSampleProvenance();
             while (sp != null) {
@@ -289,7 +285,7 @@ public class CerberusClient implements ExtendedProvenanceClient {
         Map<String, Collection<SampleProvenance>> map = new HashMap<>();
         try {
             log.debug("Getting provenance type " + type + ", action " + action);
-            InputStream jsonStream = phc.getProvenanceJson(providerSettings, type, action, filtersToStrings(filters));
+            InputStream jsonStream = phc.getProvenanceJson(type, action, filtersToStrings(filters));
             map = new MapOfCollectionsReader(jsonStream).readSample();
         } catch (IOException e) {
             throw new UncheckedIOException(e);
@@ -304,7 +300,7 @@ public class CerberusClient implements ExtendedProvenanceClient {
         Map<String, Map<String, SampleProvenance>> map = new HashMap<>();
         try {
             log.debug("Getting provenance type " + type + ", action " + action);
-            InputStream jsonStream = phc.getProvenanceJson(providerSettings, type, action, filtersToStrings(filters));
+            InputStream jsonStream = phc.getProvenanceJson(type, action, filtersToStrings(filters));
             map = new MapOfMapsReader(jsonStream).readSample();
         } catch (IOException e) {
             throw new UncheckedIOException(e);

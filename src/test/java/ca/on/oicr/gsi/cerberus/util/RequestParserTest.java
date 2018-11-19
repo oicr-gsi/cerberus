@@ -5,14 +5,9 @@
  */
 package ca.on.oicr.gsi.cerberus.util;
 
-import ca.on.oicr.gsi.cerberus.Base;
-import ca.on.oicr.gsi.cerberus.util.PostField;
-import ca.on.oicr.gsi.cerberus.util.RequestParser;
 import ca.on.oicr.gsi.provenance.FileProvenanceFilter;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -27,12 +22,11 @@ import org.junit.Test;
  *
  * @author ibancarz
  */
-public class RequestParserTest extends Base {
+public class RequestParserTest {
 
     private static String input;
     private final Map<FileProvenanceFilter, Set<String>> filters1;
     private final Map<FileProvenanceFilter, Set<String>> filters2;
-    private ArrayList<Map> providerSettings;
     private final ObjectMapper om;
     private static final String PROVENANCE_TYPE = "FILE";
     private static final String PROVENANCE_ACTION = "INC_EXC_FILTERS";
@@ -55,8 +49,6 @@ public class RequestParserTest extends Base {
 
     @Before
     public void setUp() throws IOException {
-        // done here instead of in constructor to safely use overridable method
-        providerSettings = getTestProviderSettings();
         // create the JSON input string
         // construct a Map from scratch instead of converting getTestFilters() output to string
         // the latter will have "processing-status" instead of "processing_status"
@@ -67,7 +59,6 @@ public class RequestParserTest extends Base {
         filterStrings2.put("study", new HashSet(Arrays.asList("xenomorph")));
         inputMap.put(PostField.INC_FILTER, filterStrings1);
         inputMap.put(PostField.EXC_FILTER, filterStrings2);
-        inputMap.put(PostField.PROVIDER, providerSettings);
         inputMap.put(PostField.ACTION, PROVENANCE_ACTION);
         inputMap.put(PostField.TYPE, PROVENANCE_TYPE);
         input = om.writeValueAsString(inputMap);
@@ -93,20 +84,6 @@ public class RequestParserTest extends Base {
         Map<FileProvenanceFilter, Set<String>> filtersOut = rp.getIncFilters();
         assertNotNull(filtersOut);
         assertTrue(filtersOut.equals(filters1));
-    }
-
-    @Test
-    public void testProviderSettings() throws IOException {
-
-        RequestParser rp = new RequestParser(input);
-        String providerSettingsOut = rp.getProviderSettings();
-        assertNotNull(providerSettingsOut);
-
-        // Compare by converting input HashMap and output String to JsonNodes
-        String providerSettingsIn = om.writeValueAsString(providerSettings);
-        JsonNode rootIn = om.readTree(providerSettingsIn);
-        JsonNode rootOut = om.readTree(providerSettingsOut);
-        assertTrue(rootIn.equals(rootOut));
     }
     
     @Test
