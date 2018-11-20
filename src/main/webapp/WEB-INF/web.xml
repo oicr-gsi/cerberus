@@ -6,6 +6,6 @@
     <display-name>Cerberus</display-name>
     <context-param>
         <param-name>provenanceProviderSettings</param-name>
-    <param-value>/etc/tomcat/cerberus/providerSettings.json</param-value>
+        <param-value></param-value>
 </context-param>        
 </web-app>
