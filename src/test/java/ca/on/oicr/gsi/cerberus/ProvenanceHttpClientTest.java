@@ -39,7 +39,7 @@ import org.mockito.runners.MockitoJUnitRunner;
  * @author ibancarz
  */
 @RunWith(MockitoJUnitRunner.class)
-public class ProvenanceHttpClientTest extends Base {
+public class ProvenanceHttpClientTest {
 
     // Create a ProvenanceHttpClient with mock httpPost and httpRequest as arguments
     CloseableHttpClient myHttpClient = mock(CloseableHttpClient.class);
@@ -87,14 +87,13 @@ public class ProvenanceHttpClientTest extends Base {
     public void testAnalysisProvenance() throws IOException {
         ProvenanceHttpClient myClient = new ProvenanceHttpClient(myHttpClient, myHttpPost);
         String type = ProvenanceType.ANALYSIS.name();
-        ArrayList<Map> providerSettings = getTestProviderSettings();
         Map<String, Set<String>> filters1 = new HashMap<>();
         filters1.put("processing_status", new HashSet(Arrays.asList("success")));
-        String response1 = IOUtils.toString(myClient.getProvenanceJson(providerSettings, type)); // no filter
+        String response1 = IOUtils.toString(myClient.getProvenanceJson(type)); // no filter
         assertTrue(response1.equals(dummyOutputs.get(0)));
-        String response2 = IOUtils.toString(myClient.getProvenanceJson(providerSettings, type, ProvenanceAction.INC_FILTERS.name(), filters1)); 
+        String response2 = IOUtils.toString(myClient.getProvenanceJson(type, ProvenanceAction.INC_FILTERS.name(), filters1)); 
         assertTrue(response2.equals(dummyOutputs.get(1)));
-        String response3 = IOUtils.toString(myClient.getProvenanceJson(providerSettings, type, ProvenanceAction.BY_PROVIDER.name(), filters1));
+        String response3 = IOUtils.toString(myClient.getProvenanceJson(type, ProvenanceAction.BY_PROVIDER.name(), filters1));
         assertTrue(response3.equals(dummyOutputs.get(2)));  
     }
     
@@ -102,16 +101,15 @@ public class ProvenanceHttpClientTest extends Base {
     public void testFileProvenance() throws IOException {
         ProvenanceHttpClient myClient = new ProvenanceHttpClient(myHttpClient, myHttpPost);
         String type = ProvenanceType.FILE.name();
-        ArrayList<Map> providerSettings = getTestProviderSettings();
         Map<String, Set<String>> filters1 = new HashMap<>();
         filters1.put("processing_status", new HashSet(Arrays.asList("success")));
         Map<String, Set<String>> filters2 = new HashMap<>();
         filters2.put("study", new HashSet(Arrays.asList("xenomorph")));
-        String response1 = IOUtils.toString(myClient.getProvenanceJson(providerSettings, type)); // no filter
+        String response1 = IOUtils.toString(myClient.getProvenanceJson(type)); // no filter
         assertTrue(response1.equals(dummyOutputs.get(0)));
-        String response2 = IOUtils.toString(myClient.getProvenanceJson(providerSettings, type, ProvenanceAction.INC_FILTERS.name(), filters1));
+        String response2 = IOUtils.toString(myClient.getProvenanceJson(type, ProvenanceAction.INC_FILTERS.name(), filters1));
         assertTrue(response2.equals(dummyOutputs.get(1)));
-        String response3 = IOUtils.toString(myClient.getProvenanceJson(providerSettings, type, ProvenanceAction.INC_EXC_FILTERS.name(), filters1, filters2));
+        String response3 = IOUtils.toString(myClient.getProvenanceJson(type, ProvenanceAction.INC_EXC_FILTERS.name(), filters1, filters2));
         assertTrue(response3.equals(dummyOutputs.get(2)));    
     }
     
@@ -119,16 +117,15 @@ public class ProvenanceHttpClientTest extends Base {
     public void testLaneProvenance() throws IOException {
         ProvenanceHttpClient myClient = new ProvenanceHttpClient(myHttpClient, myHttpPost);
         String type = ProvenanceType.LANE.name();
-        ArrayList<Map> providerSettings = getTestProviderSettings();
         Map<String, Set<String>> filters1 = new HashMap<>();
         filters1.put("processing_status", new HashSet(Arrays.asList("success")));
-        String response1 = IOUtils.toString(myClient.getProvenanceJson(providerSettings, type)); // no filter
+        String response1 = IOUtils.toString(myClient.getProvenanceJson(type)); // no filter
         assertTrue(response1.equals(dummyOutputs.get(0)));
-        String response2 = IOUtils.toString(myClient.getProvenanceJson(providerSettings, type, ProvenanceAction.INC_FILTERS.name(), filters1)); 
+        String response2 = IOUtils.toString(myClient.getProvenanceJson(type, ProvenanceAction.INC_FILTERS.name(), filters1)); 
         assertTrue(response2.equals(dummyOutputs.get(1)));
-        String response3 = IOUtils.toString(myClient.getProvenanceJson(providerSettings, type, ProvenanceAction.BY_PROVIDER.name(), filters1));
+        String response3 = IOUtils.toString(myClient.getProvenanceJson(type, ProvenanceAction.BY_PROVIDER.name(), filters1));
         assertTrue(response3.equals(dummyOutputs.get(2)));
-        String response4 = IOUtils.toString(myClient.getProvenanceJson(providerSettings, type, ProvenanceAction.BY_PROVIDER_AND_ID.name(), filters1));
+        String response4 = IOUtils.toString(myClient.getProvenanceJson(type, ProvenanceAction.BY_PROVIDER_AND_ID.name(), filters1));
         assertTrue(response4.equals(dummyOutputs.get(3)));
     }
     
@@ -136,16 +133,15 @@ public class ProvenanceHttpClientTest extends Base {
     public void testSampleProvenance() throws IOException {
         ProvenanceHttpClient myClient = new ProvenanceHttpClient(myHttpClient, myHttpPost);
         String type = ProvenanceType.SAMPLE.name();
-        ArrayList<Map> providerSettings = getTestProviderSettings();
         Map<String, Set<String>> filters1 = new HashMap<>();
         filters1.put("processing_status", new HashSet(Arrays.asList("success")));
-        String response1 = IOUtils.toString(myClient.getProvenanceJson(providerSettings, type)); // no filter
+        String response1 = IOUtils.toString(myClient.getProvenanceJson(type)); // no filter
         assertTrue(response1.equals(dummyOutputs.get(0)));
-        String response2 = IOUtils.toString(myClient.getProvenanceJson(providerSettings, type, ProvenanceAction.INC_FILTERS.name(), filters1));
+        String response2 = IOUtils.toString(myClient.getProvenanceJson(type, ProvenanceAction.INC_FILTERS.name(), filters1));
         assertTrue(response2.equals(dummyOutputs.get(1)));
-        String response3 = IOUtils.toString(myClient.getProvenanceJson(providerSettings, type, ProvenanceAction.BY_PROVIDER.name(), filters1));
+        String response3 = IOUtils.toString(myClient.getProvenanceJson(type, ProvenanceAction.BY_PROVIDER.name(), filters1));
         assertTrue(response3.equals(dummyOutputs.get(2)));
-        String response4 = IOUtils.toString(myClient.getProvenanceJson(providerSettings, type, ProvenanceAction.BY_PROVIDER_AND_ID.name(),  filters1));
+        String response4 = IOUtils.toString(myClient.getProvenanceJson(type, ProvenanceAction.BY_PROVIDER_AND_ID.name(),  filters1));
         assertTrue(response4.equals(dummyOutputs.get(3)));
     }
 

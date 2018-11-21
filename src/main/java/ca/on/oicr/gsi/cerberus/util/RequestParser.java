@@ -35,7 +35,6 @@ public class RequestParser {
 
     private final ObjectMapper om;
 
-    private final JsonNode providerNode;
     private final JsonNode actionNode;
     private final JsonNode typeNode;
     private final JsonNode incFilterNode;
@@ -68,7 +67,6 @@ public class RequestParser {
             log.fatal(msg);
             throw new IllegalArgumentException(msg);
         }
-        providerNode = root.get(PostField.PROVIDER.name());
         incFilterNode = root.get(PostField.INC_FILTER.name());
         excFilterNode = root.get(PostField.EXC_FILTER.name());
         typeNode = root.get(PostField.TYPE.name());
@@ -101,21 +99,7 @@ public class RequestParser {
         return parseFilters(excFilterNode);
     }
 
-    /**
-     * Get input parameters for a ProviderLoader; see
-     * pipedev/pipedev-provenance-impl
-     *
-     * ProviderLoader expects a JSON string with appropriate data structure
-     * Extract the string from relevant JSON node and return
-     *
-     * @throws JsonProcessingException
-     * @return String provider text
-     */
-    public String getProviderSettings() throws JsonProcessingException {
-
-        return om.writeValueAsString(providerNode);
-    }
-
+    
     /**
      * Get the provenance type: ANALYSIS, FILE, LANE, SAMPLE Check input against
      * enumeration of allowable types

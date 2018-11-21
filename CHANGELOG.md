@@ -7,6 +7,8 @@ Unreleased
 - Caching for provenance results
 - Integration tests using "real" databases and web server
 - Improved documentation and argument checking for CLI
+- GP-1876: Split Cerberus into modules
+- GP-1877: Move Provenance configuration from client to server
 
 
 Version 0.3.1: 2018-09-27

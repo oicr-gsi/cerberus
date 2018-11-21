@@ -31,7 +31,6 @@ import java.util.Set;
 import static org.apache.commons.collections4.CollectionUtils.isEqualCollection;
 import org.apache.commons.collections4.Equator;
 import static org.junit.Assert.assertTrue;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import static org.mockito.Matchers.any;
@@ -45,17 +44,16 @@ import org.mockito.runners.MockitoJUnitRunner;
  * @author ibancarz
  */
 @RunWith(MockitoJUnitRunner.class)
-public class CerberusClientTest extends Base {
+public class CerberusClientTest {
 
     ProvenanceHttpClient phc = mock(ProvenanceHttpClient.class);
     private static ObjectMapper om;
     private static ClassLoader classLoader;
     private static Map<FileProvenanceFilter, Set<String>> filters1;
     private static Map<FileProvenanceFilter, Set<String>> filters2;
-    private CerberusClient client;
-    private ArrayList<Map> providerSettings;
     private static final String PROVIDER_KEY = "weyland-yutani";
     private static final String ID_KEY = "LV-426";
+    private final CerberusClient client;
 
     public CerberusClientTest() {
         om = new ObjectMapper();
@@ -66,14 +64,9 @@ public class CerberusClientTest extends Base {
         filters1.put(FileProvenanceFilter.valueOf("processing_status"), new HashSet(Arrays.asList("success")));
         filters2 = new HashMap<>();
         filters2.put(FileProvenanceFilter.valueOf("study"), new HashSet(Arrays.asList("xenomorph")));
+        client = new CerberusClient(phc);
     }
 
-    @Before
-    public void setUp() throws IOException {
-        providerSettings = getTestProviderSettings(); // overridable method call shouldn't go in constructor
-        client = new CerberusClient(providerSettings, phc);
-
-    }
 
     @Test
     public void getAnalysisProvenanceTest() throws IOException {
@@ -82,17 +75,14 @@ public class CerberusClientTest extends Base {
         AnalysisProvenance apExample = new AnalysisProvenanceFromJSON(om.readTree(apJsonFile).get(0));
         apColl.add(apExample);
         byte[] ap = om.writeValueAsBytes(apColl);
-        when(phc.getProvenanceJson(any(ArrayList.class), eq(ProvenanceType.ANALYSIS.name()))).thenReturn(new ByteArrayInputStream(ap));
-        when(phc.getProvenanceJson(
-                any(ArrayList.class),
-                eq(ProvenanceType.ANALYSIS.name()),
+        when(phc.getProvenanceJson(eq(ProvenanceType.ANALYSIS.name()))).thenReturn(new ByteArrayInputStream(ap));
+        when(phc.getProvenanceJson(eq(ProvenanceType.ANALYSIS.name()),
                 eq(ProvenanceAction.INC_FILTERS.name()),
                 any(Map.class)
         )).thenReturn(new ByteArrayInputStream(ap));
         Map<String, Collection<AnalysisProvenance>> apByProvider = new HashMap<>();
         apByProvider.put(PROVIDER_KEY, apColl);
         when(phc.getProvenanceJson(
-                any(ArrayList.class),
                 eq(ProvenanceType.ANALYSIS.name()),
                 eq(ProvenanceAction.BY_PROVIDER.name()),
                 any(Map.class)
@@ -114,15 +104,13 @@ public class CerberusClientTest extends Base {
         File fpJsonFile = new File(classLoader.getResource("dummyFileProvenance.json").getFile());
         fpColl.add(new FileProvenanceFromJSON(om.readTree(fpJsonFile).get(0)));
         byte[] fp = om.writeValueAsBytes(fpColl);
-        when(phc.getProvenanceJson(any(ArrayList.class), eq(ProvenanceType.FILE.name()))).thenReturn(new ByteArrayInputStream(fp));
+        when(phc.getProvenanceJson(eq(ProvenanceType.FILE.name()))).thenReturn(new ByteArrayInputStream(fp));
         when(phc.getProvenanceJson(
-                any(ArrayList.class),
                 eq(ProvenanceType.FILE.name()),
                 eq(ProvenanceAction.INC_FILTERS.name()),
                 any(Map.class)
         )).thenReturn(new ByteArrayInputStream(fp));
         when(phc.getProvenanceJson(
-                any(ArrayList.class),
                 eq(ProvenanceType.FILE.name()),
                 eq(ProvenanceAction.INC_EXC_FILTERS.name()),
                 any(Map.class),
@@ -145,9 +133,8 @@ public class CerberusClientTest extends Base {
         LaneProvenance lpExample = new LaneProvenanceFromJSON(om.readTree(lpJsonFile).get(0));
         lpColl.add(lpExample);
         byte[] lp = om.writeValueAsBytes(lpColl);
-        when(phc.getProvenanceJson(any(ArrayList.class), eq(ProvenanceType.LANE.name()))).thenReturn(new ByteArrayInputStream(lp));
+        when(phc.getProvenanceJson(eq(ProvenanceType.LANE.name()))).thenReturn(new ByteArrayInputStream(lp));
         when(phc.getProvenanceJson(
-                any(ArrayList.class),
                 eq(ProvenanceType.LANE.name()),
                 eq(ProvenanceAction.INC_FILTERS.name()),
                 any(Map.class)
@@ -155,7 +142,6 @@ public class CerberusClientTest extends Base {
         Map<String, Collection<LaneProvenance>> lpByProvider = new HashMap<>();
         lpByProvider.put(PROVIDER_KEY, lpColl);
         when(phc.getProvenanceJson(
-                any(ArrayList.class),
                 eq(ProvenanceType.LANE.name()),
                 eq(ProvenanceAction.BY_PROVIDER.name()),
                 any(Map.class)
@@ -165,7 +151,6 @@ public class CerberusClientTest extends Base {
         lpById.put(ID_KEY, lpExample);
         lpByProviderAndId.put(PROVIDER_KEY, lpById);
         when(phc.getProvenanceJson(
-                any(ArrayList.class),
                 eq(ProvenanceType.LANE.name()),
                 eq(ProvenanceAction.BY_PROVIDER_AND_ID.name()),
                 any(Map.class)
@@ -189,9 +174,8 @@ public class CerberusClientTest extends Base {
         SampleProvenance spExample = new SampleProvenanceFromJSON(om.readTree(spJsonFile).get(0));
         spColl.add(spExample);
         byte[] sp = om.writeValueAsBytes(spColl);
-        when(phc.getProvenanceJson(any(ArrayList.class), eq(ProvenanceType.SAMPLE.name()))).thenReturn(new ByteArrayInputStream(sp));
+        when(phc.getProvenanceJson(eq(ProvenanceType.SAMPLE.name()))).thenReturn(new ByteArrayInputStream(sp));
         when(phc.getProvenanceJson(
-                any(ArrayList.class),
                 eq(ProvenanceType.SAMPLE.name()),
                 eq(ProvenanceAction.INC_FILTERS.name()),
                 any(Map.class)
@@ -199,7 +183,6 @@ public class CerberusClientTest extends Base {
         Map<String, Collection<SampleProvenance>> spByProvider = new HashMap<>();
         spByProvider.put(PROVIDER_KEY, spColl);
         when(phc.getProvenanceJson(
-                any(ArrayList.class),
                 eq(ProvenanceType.SAMPLE.name()),
                 eq(ProvenanceAction.BY_PROVIDER.name()),
                 any(Map.class)
@@ -209,7 +192,6 @@ public class CerberusClientTest extends Base {
         spById.put(ID_KEY, spExample);
         spByProviderAndId.put(PROVIDER_KEY, spById);
         when(phc.getProvenanceJson(
-                any(ArrayList.class),
                 eq(ProvenanceType.SAMPLE.name()),
                 eq(ProvenanceAction.BY_PROVIDER_AND_ID.name()),
                 any(Map.class)

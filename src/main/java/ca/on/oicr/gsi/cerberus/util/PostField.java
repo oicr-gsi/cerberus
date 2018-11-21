@@ -13,6 +13,6 @@ package ca.on.oicr.gsi.cerberus.util;
  */
 public enum PostField {
     
-    PROVIDER, INC_FILTER, EXC_FILTER, ACTION, TYPE;
+    INC_FILTER, EXC_FILTER, ACTION, TYPE;
     
 }

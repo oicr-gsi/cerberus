@@ -9,6 +9,8 @@ import ca.on.oicr.gsi.cerberus.util.RequestParser;
 import ca.on.oicr.gsi.provenance.FileProvenanceFilter;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.File;
+import java.io.IOError;
 import java.io.IOException;
 import java.util.Map;
 import java.util.Set;
@@ -18,7 +20,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.io.IOUtils;
+import static org.apache.commons.io.FileUtils.readFileToString;
 import static org.apache.commons.lang.exception.ExceptionUtils.getStackTrace;
+
 
 /**
  *
@@ -44,12 +48,22 @@ public class ProvenanceServlet extends HttpServlet {
         BufferedReader reqReader = request.getReader();
         String body = IOUtils.toString(reqReader);
 
+        // read type, action, and filters from http request
         RequestParser rp = new RequestParser(body);
-        String providerSettings = rp.getProviderSettings();
         String type = rp.getProvenanceType();
         String action = rp.getProvenanceAction();
         Map<FileProvenanceFilter, Set<String>> incFilters = rp.getIncFilters();
         Map<FileProvenanceFilter, Set<String>> excFilters = rp.getExcFilters();
+
+        // read provider settings from server-side config file
+        String providerSettings = null;
+        try {
+            String providerPath = this.getServletContext().getInitParameter("provenanceProviderSettings");
+            providerSettings = readFileToString(new File(providerPath));
+        } catch (IOError e) {
+            String message = "<p>"+e.getMessage()+"</p>\n<p>"+getStackTrace(e)+"</p>\n";
+            response.sendError(500, message);
+        }
 
         response.setContentType("application/json;charset=UTF-8");
         BufferedWriter writer = new BufferedWriter(response.getWriter());

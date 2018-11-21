@@ -48,7 +48,6 @@ public class Cerberus {
         options.addOption("i", "include", true, "Path to a JSON file; include results matching filter parameters in file");
         options.addOption("n", "no-gzip", false, "Omit gzip compression of output (not recommended for large datasets)");
         options.addOption("o", "out", true, "Path to a file for JSON output");
-        options.addOption("p", "provider", true, "Path to a JSON file with Provenance Provider settings");
         options.addOption("t", "type", true, "Provenance type: One of ANALYSIS, LANE, FILE, SAMPLE");
         options.addOption("u", "uri", true, "URI of the Cerberus web service");
         options.addOption("x", "exclude", true, "Path to a JSON file; exclude results matching filter parameters in file");
@@ -82,7 +81,6 @@ public class Cerberus {
         String action = line.getOptionValue("action");
 
         try {
-            ArrayList<Map> providerSettings = readProviderSettings(line.getOptionValue("provider"));
             Map<String, Set<String>> incFilters = null;
 
             // obtain the InputStream
@@ -92,11 +90,11 @@ public class Cerberus {
             InputStream provenanceInput = null;
             if (action.equals(ProvenanceAction.INC_EXC_FILTERS.name())) {
                 Map<String, Set<String>> excFilters = readFilterSettings(line.getOptionValue("exclude"));
-                provenanceInput = client.getProvenanceJson(providerSettings, type, action, incFilters, excFilters);
+                provenanceInput = client.getProvenanceJson(type, action, incFilters, excFilters);
             } else if (action.equals(ProvenanceAction.NO_FILTER.name())) {
-                provenanceInput = client.getProvenanceJson(providerSettings, type);
+                provenanceInput = client.getProvenanceJson(type);
             } else {
-                provenanceInput = client.getProvenanceJson(providerSettings, type, action, incFilters);
+                provenanceInput = client.getProvenanceJson(type, action, incFilters);
             }
 
             // configure the OutputStream
@@ -146,11 +144,4 @@ public class Cerberus {
         return filters;
     }
 
-    private static ArrayList<Map> readProviderSettings(String inputPath) throws IOException {
-        String providerString = readFileToString(new File(inputPath));
-        ObjectMapper om = new ObjectMapper();
-        ArrayList<Map> providerSettings = new ArrayList<>();
-        providerSettings = om.readValue(providerString, providerSettings.getClass());
-        return providerSettings;
-    }
 }

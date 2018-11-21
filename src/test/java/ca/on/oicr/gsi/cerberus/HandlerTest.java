@@ -29,11 +29,11 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import static org.apache.commons.io.FileUtils.readFileToString;
 import org.apache.commons.io.output.NullOutputStream;
 import org.junit.Test;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
-import org.junit.Before;
 import org.junit.runner.RunWith;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyMap;
@@ -52,10 +52,10 @@ import org.mockito.runners.MockitoJUnitRunner;
  * @author ibancarz
  */
 @RunWith(MockitoJUnitRunner.class)
-public class HandlerTest extends Base {
+public class HandlerTest {
 
     private static ClassLoader classLoader;
-    private String providerSettings;
+    private final String providerSettings;
     private final HashSet<AnalysisProvenance> dummyAnalysisProvenance;
     private final HashSet<FileProvenance> dummyFileProvenance;
     private final HashSet<LaneProvenance> dummyLaneProvenance;
@@ -145,13 +145,10 @@ public class HandlerTest extends Base {
         sampleTmp.put(DUMMY_ID, sp);
         sbpid.put(DUMMY_PROVIDER, sampleTmp);
         when(dpc.getSampleProvenanceByProviderAndId(any(Map.class))).thenReturn(sbpid);
-
-    }
-
-    @Before
-    public void setUp() throws IOException {
-        // place in setup, not constructor, to avoid overridable method call warning
-        providerSettings = new ObjectMapper().writeValueAsString(getTestProviderSettings());
+        
+        File providerFile = new File(classLoader.getResource("providerSettings.json").getFile());
+        providerSettings = readFileToString(providerFile);
+        
     }
 
     @Test
