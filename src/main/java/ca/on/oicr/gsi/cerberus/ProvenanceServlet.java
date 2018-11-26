@@ -30,7 +30,7 @@ import static org.apache.commons.lang.exception.ExceptionUtils.getStackTrace;
  *
  * @author ibancarz
  */
-@WebServlet(name = "ProvenanceServlet", urlPatterns = {"/provenance"})
+@WebServlet(name = "ProvenanceServlet")
 public class ProvenanceServlet extends HttpServlet {
 
     /**
