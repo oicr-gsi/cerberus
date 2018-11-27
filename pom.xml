@@ -10,7 +10,10 @@
     <name>cerberus</name>
 
     <modules>
-        <module>cerberus-core</module>
+      <module>cerberus-core</module>
+      <module>cerberus-cli</module>
+      <module>cerberus-client</module>
+      <module>cerberus-webapp</module>
     </modules>
 
     <properties>
