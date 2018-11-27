@@ -6,6 +6,6 @@
         <artifactId>cerberus</artifactId>
         <version>1.0-SNAPSHOT</version>
     </parent>
-    <artifactId>cerberus-common</artifactId>
+    <artifactId>cerberus-core</artifactId>
     <packaging>jar</packaging>
 </project>

@@ -10,7 +10,7 @@
     <name>cerberus</name>
 
     <modules>
-        <module>cerberus-common</module>
+        <module>cerberus-core</module>
     </modules>
 
     <properties>
