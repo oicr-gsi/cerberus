@@ -5,9 +5,16 @@
     <groupId>ca.on.oicr.gsi</groupId>
     <artifactId>cerberus</artifactId>
     <version>1.0-SNAPSHOT</version>
-    <packaging>war</packaging>
+    <packaging>pom</packaging>
 
     <name>cerberus</name>
+
+    <modules>
+      <module>cerberus-core</module>
+      <module>cerberus-cli</module>
+      <module>cerberus-client</module>
+      <module>cerberus-webapp</module>
+    </modules>
 
     <properties>
         <endorsed.dir>${project.build.directory}/endorsed</endorsed.dir>
@@ -102,19 +109,19 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-          <groupId>io.prometheus</groupId>
-          <artifactId>simpleclient</artifactId>
-          <version>${prometheus.version}</version>
+            <groupId>io.prometheus</groupId>
+            <artifactId>simpleclient</artifactId>
+            <version>${prometheus.version}</version>
         </dependency>
         <dependency>
-          <groupId>io.prometheus</groupId>
-          <artifactId>simpleclient_hotspot</artifactId>
-          <version>${prometheus.version}</version>
+            <groupId>io.prometheus</groupId>
+            <artifactId>simpleclient_hotspot</artifactId>
+            <version>${prometheus.version}</version>
         </dependency>
         <dependency>
-          <groupId>io.prometheus</groupId>
-          <artifactId>simpleclient_servlet</artifactId>
-          <version>${prometheus.version}</version>
+            <groupId>io.prometheus</groupId>
+            <artifactId>simpleclient_servlet</artifactId>
+            <version>${prometheus.version}</version>
         </dependency>
     </dependencies>
 

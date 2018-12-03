@@ -14,8 +14,25 @@ Goals of Cerberus
 - Allow provenance data to be consumed in non-Java languages
 
 
-Installation
-------------
+Structure
+---------
+
+Cerberus is split into four modules:
+- `cerberus-core`: Shared classes
+- `cerberus-cli`: Command-line interface
+- `cerberus-client`: Provenance client class
+- `cerberus-webapp`: Server-side code for web application
+
+
+Command-line usage
+------------------
+
+After building Cerberus, run:
+
+`java -jar cerberus-cli/target/cerberus-cli-${VERSION}-jar-with-dependencies.jar`
+
+Installation of webapp
+----------------------
 
 See `INSTALL.md`.
 
