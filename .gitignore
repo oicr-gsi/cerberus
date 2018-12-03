@@ -1,8 +1,5 @@
-/target/
+target
 /nbproject/
 Temp*
 *~
-/cerberus-core/target/
-/cerberus-webapp/target/
-/cerberus-client/target/
-/cerberus-cli/target/
+
