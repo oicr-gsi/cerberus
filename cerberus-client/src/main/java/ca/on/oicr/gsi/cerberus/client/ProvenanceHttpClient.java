@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package ca.on.oicr.gsi.cerberus;
+package ca.on.oicr.gsi.cerberus.client;
 
 import ca.on.oicr.gsi.cerberus.util.PostField;
 import ca.on.oicr.gsi.cerberus.util.ProvenanceAction;
@@ -14,9 +14,9 @@ import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
-import javax.xml.ws.http.HTTPException;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpResponseException;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
@@ -40,7 +40,7 @@ import org.apache.logging.log4j.LogManager;
  *
  * @author ibancarz
  */
-public class ProvenanceHttpClient {
+public class ProvenanceHttpClient implements AutoCloseable {
 
     private final CloseableHttpClient httpClient;
     private final HttpPost httpPost;
@@ -97,10 +97,10 @@ public class ProvenanceHttpClient {
             String provenanceAction,
             Map<String, Set<String>> incFilterSettings,
             Map<String, Set<String>> excFilterSettings)
-            throws IOException, HTTPException {
+            throws IOException, HttpResponseException {
 
         // encode settings as json
-        Map allSettings = new HashMap();
+        Map<PostField, Object> allSettings = new HashMap<>();
         allSettings.put(PostField.ACTION, provenanceAction);
         allSettings.put(PostField.TYPE, provenanceType);
         allSettings.put(PostField.INC_FILTER, incFilterSettings);
@@ -125,7 +125,7 @@ public class ProvenanceHttpClient {
             log.error("HTTP response content follows:");
             String content = EntityUtils.toString(response.getEntity());
             log.error(content);
-            throw new HTTPException(status);
+            throw new HttpResponseException(status, content);
         }
         log.debug("HTTP status is OK");
 
@@ -137,7 +137,7 @@ public class ProvenanceHttpClient {
             String provenanceType,
             String provenanceAction,
             Map<String, Set<String>> incFilterSettings)
-            throws IOException, HTTPException {
+            throws IOException, HttpResponseException {
 
         Map<String, Set<String>> excFilterSettings = new HashMap<>();
         return getProvenanceJson(provenanceType, provenanceAction, incFilterSettings, excFilterSettings);
@@ -145,7 +145,7 @@ public class ProvenanceHttpClient {
 
     public InputStream getProvenanceJson(
             String provenanceType)
-            throws IOException, HTTPException {
+            throws IOException, HttpResponseException {
 
         String provenanceAction = ProvenanceAction.NO_FILTER.name();
         Map<String, Set<String>> incFilterSettings = new HashMap<>();

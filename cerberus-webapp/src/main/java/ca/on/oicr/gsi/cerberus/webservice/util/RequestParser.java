@@ -3,8 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package ca.on.oicr.gsi.cerberus.util;
+package ca.on.oicr.gsi.cerberus.webservice.util;
 
+import ca.on.oicr.gsi.cerberus.util.PostField;
+import ca.on.oicr.gsi.cerberus.util.ProvenanceAction;
+import ca.on.oicr.gsi.cerberus.util.ProvenanceType;
 import ca.on.oicr.gsi.provenance.FileProvenanceFilter;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;

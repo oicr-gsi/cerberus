@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package ca.on.oicr.gsi.cerberus;
+package ca.on.oicr.gsi.cerberus.webservice;
 
 import ca.on.oicr.gsi.cerberus.util.ProvenanceType;
 import ca.on.oicr.gsi.cerberus.util.ProvenanceAction;
