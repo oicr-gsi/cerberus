@@ -3,13 +3,13 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package ca.on.oicr.gsi.cerberus;
+package ca.on.oicr.gsi.cerberus.client;
 
 import ca.on.oicr.gsi.cerberus.util.ProvenanceType;
+import ca.on.oicr.gsi.cerberus.client.util.CollectionReader;
+import ca.on.oicr.gsi.cerberus.client.util.MapOfCollectionsReader;
+import ca.on.oicr.gsi.cerberus.client.util.MapOfMapsReader;
 import ca.on.oicr.gsi.cerberus.util.ProvenanceAction;
-import ca.on.oicr.gsi.cerberus.util.CollectionReader;
-import ca.on.oicr.gsi.cerberus.util.MapOfCollectionsReader;
-import ca.on.oicr.gsi.cerberus.util.MapOfMapsReader;
 import ca.on.oicr.gsi.provenance.ExtendedProvenanceClient;
 import ca.on.oicr.gsi.provenance.FileProvenanceFilter;
 import ca.on.oicr.gsi.provenance.model.AnalysisProvenance;

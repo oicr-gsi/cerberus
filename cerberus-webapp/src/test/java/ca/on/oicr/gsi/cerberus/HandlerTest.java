@@ -6,6 +6,7 @@
 package ca.on.oicr.gsi.cerberus;
 
 import ca.on.oicr.gsi.cerberus.util.ProvenanceType;
+import ca.on.oicr.gsi.cerberus.webservice.ProvenanceHandler;
 import ca.on.oicr.gsi.cerberus.util.ProvenanceAction;
 import ca.on.oicr.gsi.cerberus.model.AnalysisProvenanceFromJSON;
 import ca.on.oicr.gsi.cerberus.model.FileProvenanceFromJSON;

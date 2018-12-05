@@ -5,6 +5,7 @@
  */
 package ca.on.oicr.gsi.cerberus.util;
 
+import ca.on.oicr.gsi.cerberus.webservice.util.RequestParser;
 import ca.on.oicr.gsi.provenance.FileProvenanceFilter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;

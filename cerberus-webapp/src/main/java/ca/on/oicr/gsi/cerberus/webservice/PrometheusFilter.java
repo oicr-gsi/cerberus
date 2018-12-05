@@ -1,4 +1,4 @@
-package ca.on.oicr.gsi.cerberus;
+package ca.on.oicr.gsi.cerberus.webservice;
 
 import java.io.IOException;
 

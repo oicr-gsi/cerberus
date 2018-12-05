@@ -5,8 +5,6 @@
  */
 package ca.on.oicr.gsi.cerberus.model;
 
-import ca.on.oicr.gsi.provenance.model.IusLimsKey;
-import com.fasterxml.jackson.databind.JsonNode;
 import java.io.IOException;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -19,8 +17,10 @@ import java.util.SortedMap;
 import java.util.SortedSet;
 import java.util.TreeMap;
 import java.util.TreeSet;
-import net.sourceforge.seqware.common.dto.IusLimsKeyDto;
-import net.sourceforge.seqware.common.dto.LimsKeyDto;
+
+import com.fasterxml.jackson.databind.JsonNode;
+
+import ca.on.oicr.gsi.provenance.model.IusLimsKey;
 
 /**
  *
