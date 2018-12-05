@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package ca.on.oicr.gsi.cerberus.util;
+package ca.on.oicr.gsi.cerberus.client.util;
 
 import ca.on.oicr.gsi.provenance.model.AnalysisProvenance;
 import ca.on.oicr.gsi.provenance.model.LaneProvenance;

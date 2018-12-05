@@ -5,6 +5,7 @@
  */
 package ca.on.oicr.gsi.cerberus;
 
+import ca.on.oicr.gsi.cerberus.client.ProvenanceHttpClient;
 import ca.on.oicr.gsi.cerberus.util.ProvenanceAction;
 import ca.on.oicr.gsi.cerberus.util.ProvenanceType;
 import com.fasterxml.jackson.databind.JsonNode;

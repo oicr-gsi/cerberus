@@ -6,6 +6,7 @@
 package ca.on.oicr.gsi.cerberus;
 
 import ca.on.oicr.gsi.cerberus.util.ProvenanceType;
+import ca.on.oicr.gsi.cerberus.client.ProvenanceHttpClient;
 import ca.on.oicr.gsi.cerberus.util.ProvenanceAction;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;

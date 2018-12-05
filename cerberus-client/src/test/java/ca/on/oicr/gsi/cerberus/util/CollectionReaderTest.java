@@ -5,7 +5,7 @@
  */
 package ca.on.oicr.gsi.cerberus.util;
 
-import ca.on.oicr.gsi.cerberus.util.CollectionReader;
+import ca.on.oicr.gsi.cerberus.client.util.CollectionReader;
 import ca.on.oicr.gsi.provenance.model.AnalysisProvenance;
 import ca.on.oicr.gsi.provenance.model.FileProvenance;
 import ca.on.oicr.gsi.provenance.model.LaneProvenance;

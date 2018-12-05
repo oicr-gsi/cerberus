@@ -3,9 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package ca.on.oicr.gsi.cerberus;
+package ca.on.oicr.gsi.cerberus.webservice;
 
-import ca.on.oicr.gsi.cerberus.util.RequestParser;
+import ca.on.oicr.gsi.cerberus.webservice.util.RequestParser;
 import ca.on.oicr.gsi.provenance.FileProvenanceFilter;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
