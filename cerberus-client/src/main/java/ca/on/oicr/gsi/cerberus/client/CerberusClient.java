@@ -42,7 +42,7 @@ import org.apache.logging.log4j.LogManager;
  *
  * @author ibancarz
  */
-public class CerberusClient implements ExtendedProvenanceClient {
+public class CerberusClient implements ExtendedProvenanceClient, AutoCloseable {
 
     private final ProvenanceHttpClient phc;
     private final Logger log = LogManager.getLogger(CerberusClient.class);
@@ -314,5 +314,10 @@ public class CerberusClient implements ExtendedProvenanceClient {
             filterStrings.put(filter.name(), filters.get(filter));
         }
         return filterStrings;
+    }
+
+    @Override
+    public void close() throws Exception {
+        phc.close();
     }
 }

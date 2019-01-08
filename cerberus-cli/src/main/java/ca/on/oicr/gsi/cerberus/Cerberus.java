@@ -22,7 +22,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.zip.GZIPOutputStream;
@@ -78,10 +77,10 @@ public class Cerberus {
             System.exit(0);
         }
 
-        boolean error = false;
+        Boolean error = false;
         // check required options are present
-        List<String> required = new ArrayList<>();
-        List<String> missing = new ArrayList<>();
+        ArrayList<String> required = new ArrayList<>();
+        ArrayList<String> missing = new ArrayList<>();
         required.add(ACTION_OPT);
         required.add(OUT_OPT);
         required.add(TYPE_OPT);
@@ -135,6 +134,7 @@ public class Cerberus {
 
         ProvenanceHttpClient client = new ProvenanceHttpClient(uri);
 
+        // TODO validate inputs, eg. type and action are in respective enums
         try {
             Map<String, Set<String>> incFilters = null;
 
