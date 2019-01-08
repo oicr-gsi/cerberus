@@ -6,10 +6,15 @@ Unreleased
 
 - Caching for provenance results
 - Integration tests using "real" databases and web server
-- Improved documentation and argument checking for CLI
-- GP-1862: Remove /provenance suffix from URL
+
+
+Version 0.4.0: 2019-01-08
+-------------------------
+
+Changed:
 - GP-1876: Split Cerberus into modules
 - GP-1877: Move Provenance configuration from client to server
+- Improved documentation and argument checking for CLI
 
 
 Version 0.3.1: 2018-09-27
