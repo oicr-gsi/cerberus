@@ -78,7 +78,7 @@ public class Cerberus {
             System.exit(0);
         }
 
-        boolean error = false;
+        Boolean error = false;
         // check required options are present
         List<String> required = new ArrayList<>();
         List<String> missing = new ArrayList<>();
