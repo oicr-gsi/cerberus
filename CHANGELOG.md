@@ -15,6 +15,7 @@ Changed:
 - GP-1876: Split Cerberus into modules
 - GP-1877: Move Provenance configuration from client to server
 - Improved documentation and argument checking for CLI
+- List version as 0.4.0 in pom.xml files, for top-level project and submodules
 
 
 Version 0.3.1: 2018-09-27
