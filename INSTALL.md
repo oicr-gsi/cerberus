@@ -7,6 +7,7 @@ The following instructions assume Cerberus is being installed to an Apache Tomca
 Cerberus .war file
 ------------------
 
+- File name is `cerberus-webapp-${VERSION}.war`, eg. `cerberus-webapp-0.4.0.war`
 - Copy the `.war` file to `$TOMCAT_HOME/webapps`.
 - If replacing a previous installation, delete the uncompressed folder from `webapps`
 - Restart Tomcat so changes take effect: `sudo systemctl restart tomcat`
@@ -29,14 +30,14 @@ Cerberus requires a provenance provider settings JSON file. It is in the format 
 
 Location of the provider JSON file is specified as follows:
 
-Create a file called `$NAME.xml` in `$CATALINA_HOME/conf/Catalina/localhost`, creating the directory if necessary. `$NAME` is the name of the Cerberus deployment, eg. `cerberus-1.0-SNAPSHOT`. For example, if `$CATALINA_HOME` is `/opt/tomcat`, the full path is `/opt/tomcat/conf/Catalina/localhost/cerberus-1.0-SNAPSHOT.xml`.
+Create a file called `$NAME.xml` in `$CATALINA_HOME/conf/Catalina/localhost`, creating the directory if necessary. `$NAME` is the name of the Cerberus webapp deployment, ie. `cerberus-webapp-${VERSION}`. For example, if `$CATALINA_HOME` is `/opt/tomcat`, and release version is 0.4.0, the full path is `/opt/tomcat/conf/Catalina/localhost/cerberus-webapp-0.4.0.xml`.
 
 Populate the XML file with the following information:
 
 ```
 <Context>
-   <Parameter name="provenanceProviderSettings" value="/directory/for/settings/file/providerSettings.json" override="false"/>
+   <Parameter name="provenanceProviderSettings" value="/my/provider/settings/file.json" override="false"/>
 </Context>
 ```
 
-The directory and filename for the provider settings JSON file may be any values of the user's choice. See the [Apache Tomcat documentation](https://tomcat.apache.org/tomcat-7.0-doc/config/context.html) for further details on context parameters.
+The directory and filename for the provider settings JSON file may be any values of the user's choice. See the [Apache Tomcat documentation](https://tomcat.apache.org/tomcat-8.0-doc/config/context.html) for further details on context parameters.
