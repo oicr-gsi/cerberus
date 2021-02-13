@@ -35,8 +35,7 @@ public final class VidarrWorkflowRunSource
           .build();
   private static final ObjectMapper MAPPER = new ObjectMapper();
 
-  public static Stream<ExternalId> key(
-      ProvenanceWorkflowRun<? extends ExternalId> workflow) {
+  public static Stream<ExternalId> key(ProvenanceWorkflowRun<? extends ExternalId> workflow) {
     return workflow.getExternalKeys().stream().map(k -> new ExternalId(k.getProvider(), k.getId()));
   }
 

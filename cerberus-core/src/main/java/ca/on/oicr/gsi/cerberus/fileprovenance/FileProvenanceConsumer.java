@@ -20,8 +20,7 @@ public interface FileProvenanceConsumer {
       FileProvenanceConsumer consumer) {
     return workflowRun ->
         new JoinSink<>() {
-          private final Map<ExternalId, List<LimsProvenanceInfo>> limsKeys =
-              new HashMap<>();
+          private final Map<ExternalId, List<LimsProvenanceInfo>> limsKeys = new HashMap<>();
 
           @Override
           public void accept(LimsProvenanceInfo item) {
@@ -60,7 +59,8 @@ public interface FileProvenanceConsumer {
             }
             for (final var analysis : workflowRun.getAnalysis()) {
               for (final var key : analysis.getExternalKeys()) {
-                final var lims = limsInformation.get(new ExternalId(key.getProvider(), key.getId()));
+                final var lims =
+                    limsInformation.get(new ExternalId(key.getProvider(), key.getId()));
                 output.add(
                     new ProvenanceRecord<>(
                         key.getProvider(),
