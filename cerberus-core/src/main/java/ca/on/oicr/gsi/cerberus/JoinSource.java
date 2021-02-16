@@ -13,21 +13,56 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+/**
+ * Read records as required for joining
+ *
+ * @param <T> the type of record being consumed
+ */
 public interface JoinSource<T> {
+
+  /**
+   * Combine multiple sources of information
+   *
+   * @param sources the sources to combine
+   * @param <T> the resulting type that can be produced by all the sources
+   * @return a source that aggregates the results from all the provided sources
+   */
   @SafeVarargs
   static <T> JoinSource<T> all(JoinSource<? extends T>... sources) {
     return () -> Stream.of(sources).flatMap(JoinSource::fetch);
   }
 
+  /**
+   * Combine multiple sources of information
+   *
+   * @param sources the sources to combine
+   * @param <T> the resulting type that can be produced by all the sources
+   * @return a source that aggregates the results from all the provided sources
+   */
   static <T> JoinSource<T> all(Stream<JoinSource<? extends T>> sources) {
     final var s = sources.collect(Collectors.toList());
     return () -> s.stream().flatMap(JoinSource::fetch);
   }
 
+  /**
+   * A join source that produces no records
+   *
+   * @param <T> the type of record being produced
+   */
   static <T> JoinSource<T> empty() {
     return Stream::empty;
   }
 
+  /**
+   * A join source that masks exceptions to a limited degree
+   *
+   * <p>The source will serve the previous result if an error is throw up to a maximum failure limit
+   *
+   * @param source the join source to draw data from
+   * @param maxConsecutiveFailures the maximum number of consecutive errors the cache will tolerate
+   * @param maxInterval the maximum length of time the cache can be considered fresh
+   * @param <T> the type of record being produced
+   */
   static <T> JoinSource<T> errorResilient(
       JoinSource<T> source, OptionalInt maxConsecutiveFailures, Optional<Duration> maxInterval) {
     return new JoinSource<T>() {
@@ -55,6 +90,18 @@ public interface JoinSource<T> {
     };
   }
 
+  /**
+   * Join two data sources
+   *
+   * @param left the source of left-handed values
+   * @param right the source of right-handed values
+   * @param leftKey a function to determine the multiple keys associated a left-handed value
+   * @param rightKey a function to determine the single key associated with a right-handled value
+   * @param sinkCreator a processor to handle the joined result
+   * @param <L> the type on the left side of the join
+   * @param <R> the type on the right side of the join
+   * @param <K> the type of the join key
+   */
   static <L, R, K> void join(
       JoinSource<L> left,
       JoinSource<R> right,
@@ -75,6 +122,15 @@ public interface JoinSource<T> {
             });
   }
 
+  /**
+   * Read data fixed data from a JSON file
+   *
+   * @param input the input JSON data
+   * @param mapper a Jackson mapper to decode the data
+   * @param type the class of the records being decoded
+   * @param <T> the type of records being loaded
+   * @return a fixed source that will always produce the same data read from the JSON file
+   */
   static <T> JoinSource<T> jsonFile(InputStream input, ObjectMapper mapper, Class<T> type)
       throws IOException {
     @SuppressWarnings("unchecked")
@@ -85,6 +141,15 @@ public interface JoinSource<T> {
     return output::stream;
   }
 
+  /**
+   * Read data fixed data from a JSON file
+   *
+   * @param input the input JSON data
+   * @param mapper a Jackson mapper to decode the data
+   * @param type the class of the records being decoded
+   * @param <T> the type of records being loaded
+   * @return a fixed source that will always produce the same data read from the JSON file
+   */
   static <T> JoinSource<T> jsonFile(InputStream input, ObjectMapper mapper, TypeReference<T> type)
       throws IOException {
     @SuppressWarnings("unchecked")
@@ -99,9 +164,18 @@ public interface JoinSource<T> {
     return output::stream;
   }
 
+  /**
+   * A source that applies a transformation
+   *
+   * @param source the original data type to read
+   * @param mapper a transformation to apply
+   * @param <T> the type of the input data
+   * @param <R> the type of the transformed data
+   */
   static <T, R> JoinSource<R> map(JoinSource<T> source, Function<? super T, ? extends R> mapper) {
     return () -> source.fetch().map(mapper);
   }
 
+  /** Provided the stored dataa */
   Stream<T> fetch();
 }

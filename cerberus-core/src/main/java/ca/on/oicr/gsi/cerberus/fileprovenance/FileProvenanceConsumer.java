@@ -14,8 +14,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
 
+/** Collect joined file provenance data */
 public interface FileProvenanceConsumer {
 
+  /**
+   * Consume workflow and LIMS information, perform version matching, and emit file provenance
+   * records
+   *
+   * @param consumer a consumer of file provenance records
+   */
   static JoinSinkCreator<ProvenanceWorkflowRun<ExternalKey>, LimsProvenanceInfo> of(
       FileProvenanceConsumer consumer) {
     return workflowRun ->
@@ -76,9 +83,22 @@ public interface FileProvenanceConsumer {
         };
   }
 
+  /**
+   * Consume a workflow run that was missing one or more LIMS records
+   *
+   * @param workflow the workflow
+   * @param availableLimsInformation the Pinery information that was available, if any
+   */
   void error(
       ProvenanceWorkflowRun<ExternalKey> workflow,
       Stream<LimsProvenanceInfo> availableLimsInformation);
 
+  /**
+   * Consume a joined file provenance record
+   *
+   * @param stale whether the data is stale (a Pinery version mismatch occured for this workflow
+   *     run)
+   * @param record the joined record
+   */
   void file(boolean stale, ProvenanceRecord<LimsProvenance> record);
 }

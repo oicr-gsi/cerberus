@@ -6,6 +6,7 @@ import ca.on.oicr.ws.dto.SampleProvenanceDto;
 import java.util.Set;
 import java.util.stream.Stream;
 
+/** Fetch sample provenance info from Pinery */
 public final class SampleProvenanceSource extends BaseProvenanceSource {
 
   public SampleProvenanceSource(String provider, String baseUrl, Set<Integer> versions) {

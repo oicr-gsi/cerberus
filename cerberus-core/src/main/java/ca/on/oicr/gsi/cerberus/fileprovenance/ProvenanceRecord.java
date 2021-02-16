@@ -9,8 +9,19 @@ import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 
+/**
+ * A joined file provenance record
+ *
+ * @param <T> the subtype of LIMS information associated with this record
+ */
 public final class ProvenanceRecord<T extends LimsProvenance> {
 
+  /**
+   * Extract a value to a different type based on the subtype of LIMS data provided
+   *
+   * @param <R> the data type returned
+   * @param <L> the LIMS provenance type required
+   */
   public abstract static class Mapper<R, L extends LimsProvenance> {
     private final Class<L> subclass;
 
@@ -18,9 +29,15 @@ public final class ProvenanceRecord<T extends LimsProvenance> {
       this.subclass = subclass;
     }
 
+    /**
+     * Extract the LIMS value required
+     *
+     * @param lims the appropriate subtype
+     * @return the extracted value
+     */
     protected abstract R apply(L lims);
 
-    public Optional<R> tryApply(LimsProvenance input) {
+    public final Optional<R> tryApply(LimsProvenance input) {
       return subclass.isInstance(input)
           ? Optional.ofNullable(apply(subclass.cast(input)))
           : Optional.empty();
@@ -46,11 +63,26 @@ public final class ProvenanceRecord<T extends LimsProvenance> {
     this.provider = provider;
   }
 
+  /**
+   * Extract a different value depending on the type of LIMS data
+   *
+   * @param mappers the conversions to use
+   * @param <R> the result type required
+   * @return the resulting value of conversion if one can be found
+   */
   @SafeVarargs
   public final <R> Optional<R> apply(Mapper<R, ? extends T>... mappers) {
     return Stream.of(mappers).flatMap(m -> m.tryApply(lims).stream()).findFirst();
   }
 
+  /**
+   * Perform a callback depending on the type of LIMS data
+   *
+   * @param clazz the type of LIMS data required
+   * @param consumer a callback to handle the data if this is the required type
+   * @param <S> type of of LIMS data required
+   * @return true if the LIMS data matched this type
+   */
   public <S extends T> boolean asSubtype(Class<S> clazz, Consumer<ProvenanceRecord<S>> consumer) {
     if (clazz.isInstance(lims)) {
       consumer.accept(

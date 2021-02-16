@@ -6,6 +6,7 @@ import ca.on.oicr.ws.dto.LaneProvenanceDto;
 import java.util.Set;
 import java.util.stream.Stream;
 
+/** Fetch lane provenance data from Pinery */
 public final class LaneProvenanceSource extends BaseProvenanceSource {
 
   public LaneProvenanceSource(String provider, String baseUrl, Set<Integer> versions) {

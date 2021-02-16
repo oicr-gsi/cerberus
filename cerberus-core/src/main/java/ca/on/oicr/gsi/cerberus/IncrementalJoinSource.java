@@ -8,7 +8,21 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+/**
+ * A join sink that can be reused to incrementally download data from a remote source while keeping
+ * previously returned records
+ *
+ * @param <T> the type of records produced
+ */
 public interface IncrementalJoinSource<T> {
+
+  /**
+   * Create a join source that can collect records with no replacement
+   *
+   * @param source the incremental join source that provides records
+   * @param <T> the type of records being provided
+   * @return a join source that will attempt an incremental fetch when it is polled
+   */
   static <T> JoinSource<T> accumulating(IncrementalJoinSource<T> source) {
     return new JoinSource<>() {
       private List<T> state = List.of();
@@ -36,6 +50,19 @@ public interface IncrementalJoinSource<T> {
     };
   }
 
+  /**
+   * An incremental join source that can remove "duplicate" old records
+   *
+   * <p>All old records with a key found in the new records will be evicted from the historic set.
+   * If the same key is used multiple times, all records with that key in the historic set will be
+   * evicted, but all incrementally fetch records will be kept.
+   *
+   * @param source the incremental join source that provides records
+   * @param key a function to determine a key for each record
+   * @param <T> the type of records being provided
+   * @param <K> the type of the key
+   * @return a join source that will attempt an incremental fetch and expunge when it is polled
+   */
   static <T, K> JoinSource<T> evicting(IncrementalJoinSource<T> source, Function<T, K> key) {
     return new JoinSource<>() {
       private List<T> state = List.of();
@@ -66,11 +93,32 @@ public interface IncrementalJoinSource<T> {
     };
   }
 
+  /**
+   * Incremental fetch records with the ability to remove duplicates by picking the best records
+   *
+   * <p>Selects based on the natural order of the values
+   *
+   * @param source the incremental join source that provides records
+   * @param key a function to determine a key for each record
+   * @param <T> the type of records being provided
+   * @param <K> the type of the key
+   * @return a join source that will attempt an incremental fetch and expunge when it is polled
+   */
   static <T extends Comparable<T>, K> JoinSource<T> evictingWithComparison(
       IncrementalJoinSource<T> source, Function<T, K> key) {
     return evictingWithComparison(source, key, Comparator.naturalOrder());
   }
 
+  /**
+   * Incremental fetch records with the ability to remove duplicates by picking the best records
+   *
+   * @param source the incremental join source that provides records
+   * @param key a function to determine a key for each record
+   * @param comparator a comparator to decide which record should be selected during comparison
+   * @param <T> the type of records being provided
+   * @param <K> the type of the key
+   * @return a join source that will attempt an incremental fetch and expunge when it is polled
+   */
   static <T, K> JoinSource<T> evictingWithComparison(
       IncrementalJoinSource<T> source, Function<T, K> key, Comparator<T> comparator) {
     return new JoinSource<>() {
@@ -103,5 +151,10 @@ public interface IncrementalJoinSource<T> {
     };
   }
 
+  /**
+   * Perform an incremental fetch
+   *
+   * @return the resulting data
+   */
   UpdateResult<T> update();
 }

@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Stream;
 
+/** Incrementally fetch Vidarr workflow run data */
 public final class VidarrWorkflowRunSource
     implements IncrementalJoinSource<ProvenanceWorkflowRun<ExternalKey>> {
   private static final HttpClient CLIENT =

@@ -8,6 +8,7 @@ import ca.on.oicr.pinery.client.PineryClient;
 import java.util.Set;
 import java.util.stream.Stream;
 
+/** Perform a fetch from Pinery for a particular LIMS value type */
 public abstract class BaseProvenanceSource implements JoinSource<LimsProvenanceInfo> {
   private static final LatencyHistogram FETCH_TIME =
       new LatencyHistogram(
@@ -29,11 +30,18 @@ public abstract class BaseProvenanceSource implements JoinSource<LimsProvenanceI
     this.provider = provider;
   }
 
+  /**
+   * Fetch the real data
+   *
+   * @param client the Pinery client to use
+   * @param version the Pinery version to use
+   * @return the data fetched
+   */
   protected abstract Stream<? extends LimsProvenance> fetch(PineryClient client, String version)
       throws HttpResponseException;
 
   @Override
-  public Stream<LimsProvenanceInfo> fetch() {
+  public final Stream<LimsProvenanceInfo> fetch() {
     try (final var ignored = FETCH_TIME.start(kind, baseUrl)) {
       return versions.stream()
           .flatMap(

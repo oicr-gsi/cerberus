@@ -32,6 +32,10 @@ import java.util.zip.GZIPOutputStream;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
 
+/**
+ * Consume file provenance records and write them to a GZIP-compressed TSV table compatible with the
+ * format of the existing Niassa file provenance report
+ */
 public final class TabReportGenerator implements FileProvenanceConsumer, AutoCloseable {
 
   private static final CSVFormat CSV_FORMAT =

@@ -3,6 +3,7 @@ package ca.on.oicr.gsi.cerberus.pinery;
 import ca.on.oicr.gsi.provenance.model.LimsProvenance;
 import ca.on.oicr.gsi.vidarr.api.ExternalId;
 
+/** Store Pinery data with Pinery server information */
 public final class LimsProvenanceInfo implements Comparable<LimsProvenanceInfo> {
   private final int formatRevision;
   private final LimsProvenance lims;

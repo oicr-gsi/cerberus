@@ -1,33 +1,18 @@
 package ca.on.oicr.gsi.cerberus;
 
-import java.util.List;
-import java.util.function.Function;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
+/**
+ * Start joining on a particular value on the left-hand side of a join
+ *
+ * @param <L> the left-hand type
+ * @param <R> the right hand type
+ */
 public interface JoinSinkCreator<L, R> {
-  static <L, R, T> JoinSinkCreator<L, R> expandLeft(
-      JoinSinkCreator<T, R> sinkCreator, Function<? super L, Stream<? extends T>> children) {
-    return left ->
-        new JoinSink<>() {
-          private final List<JoinSink<R>> sinks =
-              children.apply(left).map(sinkCreator::create).collect(Collectors.toList());
 
-          @Override
-          public void accept(R item) {
-            for (final var sink : sinks) {
-              sink.accept(item);
-            }
-          }
-
-          @Override
-          public void finished() {
-            for (final var sink : sinks) {
-              sink.finished();
-            }
-          }
-        };
-  }
-
+  /**
+   * Begin consumption of right hand records for a particular right-hand value
+   *
+   * @param left the left-hand value being consumed
+   * @return a consumer of the right-hand values
+   */
   JoinSink<R> create(L left);
 }
