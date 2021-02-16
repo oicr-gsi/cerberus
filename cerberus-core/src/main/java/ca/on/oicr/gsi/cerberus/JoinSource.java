@@ -1,5 +1,9 @@
 package ca.on.oicr.gsi.cerberus;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import java.io.IOException;
+import java.io.InputStream;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.List;
@@ -69,6 +73,30 @@ public interface JoinSource<T> {
                   .forEach(sink::accept);
               sink.finished();
             });
+  }
+
+  static <T> JoinSource<T> jsonFile(InputStream input, ObjectMapper mapper, Class<T> type)
+      throws IOException {
+    @SuppressWarnings("unchecked")
+    final var output =
+        (List<T>)
+            mapper.readValue(
+                input, mapper.getTypeFactory().constructCollectionLikeType(List.class, type));
+    return output::stream;
+  }
+
+  static <T> JoinSource<T> jsonFile(InputStream input, ObjectMapper mapper, TypeReference<T> type)
+      throws IOException {
+    @SuppressWarnings("unchecked")
+    final var output =
+        (List<T>)
+            mapper.readValue(
+                input,
+                mapper
+                    .getTypeFactory()
+                    .constructCollectionLikeType(
+                        List.class, mapper.getTypeFactory().constructType(type)));
+    return output::stream;
   }
 
   static <T, R> JoinSource<R> map(JoinSource<T> source, Function<? super T, ? extends R> mapper) {
