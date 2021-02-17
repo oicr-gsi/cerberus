@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>ca.on.oicr.gsi.cerberus</groupId>
   <artifactId>cerberus</artifactId>
-  <version>0.1.0</version>
+  <version>0.1.1-SNAPSHOT</version>
   <packaging>pom</packaging>
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -119,6 +119,18 @@
       </dependency>
     </dependencies>
   </dependencyManagement>
+  <distributionManagement>
+    <repository>
+      <id>deploy.artifacts.oicr</id>
+      <name>GSI Releases</name>
+      <url>https://artifacts.oicr.on.ca/artifactory/gsi-release</url>
+    </repository>
+    <snapshotRepository>
+      <id>deploy.artifacts.oicr</id>
+      <name>GSI Snapshots</name>
+      <url>https://artifacts.oicr.on.ca/artifactory/gsi-snapshots</url>
+    </snapshotRepository>
+  </distributionManagement>
   <modules>
     <module>cerberus-core</module>
     <module>cerberus-cli</module>
