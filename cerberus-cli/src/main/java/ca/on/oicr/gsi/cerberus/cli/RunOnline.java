@@ -2,9 +2,8 @@ package ca.on.oicr.gsi.cerberus.cli;
 
 import ca.on.oicr.gsi.cerberus.JoinSource;
 import ca.on.oicr.gsi.cerberus.fileprovenance.FileProvenanceConsumer;
-import ca.on.oicr.gsi.cerberus.pinery.LaneProvenanceSource;
 import ca.on.oicr.gsi.cerberus.pinery.LimsProvenanceInfo;
-import ca.on.oicr.gsi.cerberus.pinery.SampleProvenanceSource;
+import ca.on.oicr.gsi.cerberus.pinery.PineryProvenanceSource;
 import ca.on.oicr.gsi.cerberus.vidarr.VidarrWorkflowRunSource;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.File;
@@ -50,9 +49,9 @@ public final class RunOnline implements Callable<Integer> {
                   .flatMap(
                       e ->
                           Stream.of(
-                              new LaneProvenanceSource(
+                              PineryProvenanceSource.lanes(
                                   e.getKey(), e.getValue().getUrl(), e.getValue().getVersions()),
-                              new SampleProvenanceSource(
+                              PineryProvenanceSource.samples(
                                   e.getKey(), e.getValue().getUrl(), e.getValue().getVersions())))),
           VidarrWorkflowRunSource::key,
           LimsProvenanceInfo::key,

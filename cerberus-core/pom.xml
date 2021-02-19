@@ -10,11 +10,7 @@
   <dependencies>
     <dependency>
       <groupId>ca.on.oicr</groupId>
-      <artifactId>pinery-client</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>ca.on.oicr</groupId>
-      <artifactId>pinery-service</artifactId>
+      <artifactId>pinery-ws-dto</artifactId>
     </dependency>
     <dependency>
       <groupId>ca.on.oicr</groupId>
