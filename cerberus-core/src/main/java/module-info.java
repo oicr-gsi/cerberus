@@ -9,7 +9,6 @@ module ca.on.oicr.gsi.cerberus {
   requires java.net.http;
   requires simpleclient;
   requires transitive ca.on.oicr.gsi.vidarr.pluginapi;
-  requires ca.oicr.gsi.pinery.client;
   requires ca.oicr.gsi.pinery.wsdto;
   requires ca.oicr.gsi.pinery.api;
   requires ca.oicr.gsi.provenance.api;

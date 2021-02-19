@@ -89,17 +89,12 @@
       </dependency>
       <dependency>
         <groupId>ca.on.oicr</groupId>
-        <artifactId>pinery-client</artifactId>
-        <version>${pinery-version}</version>
-      </dependency>
-      <dependency>
-        <groupId>ca.on.oicr</groupId>
-        <artifactId>pinery-service</artifactId>
-        <version>${pinery-version}</version>
-      </dependency>
-      <dependency>
-        <groupId>ca.on.oicr</groupId>
         <artifactId>pinery-api</artifactId>
+        <version>${pinery-version}</version>
+      </dependency>
+      <dependency>
+        <groupId>ca.on.oicr</groupId>
+        <artifactId>pinery-ws-dto</artifactId>
         <version>${pinery-version}</version>
       </dependency>
       <dependency>
@@ -111,6 +106,11 @@
         <groupId>ca.on.oicr.gsi.vidarr</groupId>
         <artifactId>vidarr-pluginapi</artifactId>
         <version>0.1.0</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.commons</groupId>
+        <artifactId>commons-lang3</artifactId>
+        <version>3.11</version>
       </dependency>
       <dependency>
         <groupId>org.apache.commons</groupId>
