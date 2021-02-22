@@ -8,6 +8,7 @@ import ca.on.oicr.ws.dto.LaneProvenanceDto;
 import ca.on.oicr.ws.dto.SampleProvenanceDto;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -32,6 +33,9 @@ public final class PineryProvenanceSource<T extends LimsProvenance>
           "kind",
           "target");
   private static final ObjectMapper MAPPER = new ObjectMapper();
+  static {
+    MAPPER.registerModule(new JavaTimeModule());
+  }
 
   /**
    * Get lane provenance

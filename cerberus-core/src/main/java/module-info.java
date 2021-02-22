@@ -6,6 +6,7 @@ module ca.on.oicr.gsi.cerberus {
 
   requires com.fasterxml.jackson.annotation;
   requires com.fasterxml.jackson.databind;
+  requires com.fasterxml.jackson.datatype.jsr310;
   requires java.net.http;
   requires simpleclient;
   requires transitive ca.on.oicr.gsi.vidarr.pluginapi;
