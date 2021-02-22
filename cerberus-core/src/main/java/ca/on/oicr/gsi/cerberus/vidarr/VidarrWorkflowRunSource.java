@@ -14,6 +14,7 @@ import ca.on.oicr.gsi.vidarr.api.ProvenanceWorkflowRun;
 import ca.on.oicr.gsi.vidarr.api.VersionPolicy;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import io.prometheus.client.Gauge;
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -35,6 +36,9 @@ public final class VidarrWorkflowRunSource
           .connectTimeout(Duration.ofSeconds(20))
           .build();
   private static final ObjectMapper MAPPER = new ObjectMapper();
+  static {
+    MAPPER.registerModule(new JavaTimeModule());
+  }
 
   public static Stream<ExternalId> key(ProvenanceWorkflowRun<? extends ExternalId> workflow) {
     return workflow.getExternalKeys().stream().map(k -> new ExternalId(k.getProvider(), k.getId()));
