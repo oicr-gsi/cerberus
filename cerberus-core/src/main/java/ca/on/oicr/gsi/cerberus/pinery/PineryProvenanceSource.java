@@ -33,6 +33,7 @@ public final class PineryProvenanceSource<T extends LimsProvenance>
           "kind",
           "target");
   private static final ObjectMapper MAPPER = new ObjectMapper();
+
   static {
     MAPPER.registerModule(new JavaTimeModule());
   }

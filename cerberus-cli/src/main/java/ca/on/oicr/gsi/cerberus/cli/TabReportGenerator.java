@@ -9,6 +9,8 @@ import ca.on.oicr.gsi.provenance.model.LimsProvenance;
 import ca.on.oicr.gsi.provenance.model.SampleProvenance;
 import ca.on.oicr.gsi.vidarr.api.ExternalKey;
 import ca.on.oicr.gsi.vidarr.api.ProvenanceWorkflowRun;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOError;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -25,9 +27,11 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.SortedMap;
 import java.util.SortedSet;
+import java.util.Spliterators;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 import java.util.zip.GZIPOutputStream;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
@@ -104,6 +108,7 @@ public final class TabReportGenerator implements FileProvenanceConsumer, AutoClo
               "LIMS Last Modified");
   public static final DateTimeFormatter DATE_TIME_FORMATTER =
       DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS");
+  private static final ObjectMapper MAPPER = new ObjectMapper();
   private static final Function<String, String> SANITISE_ATTRIBUTE =
       new StringSanitizerBuilder()
           .add("\t", " ")
@@ -427,7 +432,21 @@ public final class TabReportGenerator implements FileProvenanceConsumer, AutoClo
     cs.add(
         SANITISE_FIELD.apply(
             record.workflow().getWorkflowName() + "/" + record.workflow().getWorkflowVersion()));
-    cs.add(transformSimple(SANITISE_ATTRIBUTE, SANITISE_ATTRIBUTE, record.workflow().getLabels()));
+    cs.add(
+        StreamSupport.stream(
+                Spliterators.spliteratorUnknownSize(record.workflow().getLabels().fields(), 0),
+                false)
+            .map(
+                entry -> {
+                  try {
+                    return SANITISE_ATTRIBUTE.apply(entry.getKey())
+                        + "="
+                        + MAPPER.writeValueAsString(entry.getValue());
+                  } catch (JsonProcessingException e) {
+                    throw new RuntimeException(e);
+                  }
+                })
+            .collect(Collectors.joining(";")));
 
     cs.add(
         record.workflow().getInputFiles().stream()
@@ -436,7 +455,7 @@ public final class TabReportGenerator implements FileProvenanceConsumer, AutoClo
 
     cs.add(""); // Processing algorithm
     cs.add(""); // Processing SWID
-    cs.add(""); // Processing attrbutes
+    cs.add(""); // Processing attributes
     cs.add(""); // Processing status
 
     cs.add(SANITISE_FIELD.apply(record.record().getMetatype()));
