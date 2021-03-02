@@ -36,6 +36,7 @@ public final class VidarrWorkflowRunSource
           .connectTimeout(Duration.ofSeconds(20))
           .build();
   private static final ObjectMapper MAPPER = new ObjectMapper();
+
   static {
     MAPPER.registerModule(new JavaTimeModule());
   }
