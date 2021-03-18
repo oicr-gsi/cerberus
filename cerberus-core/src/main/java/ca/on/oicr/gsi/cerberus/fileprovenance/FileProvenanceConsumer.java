@@ -64,6 +64,9 @@ public interface FileProvenanceConsumer {
                 limsInformation.put(new ExternalId(key.getProvider(), key.getId()), match.get());
               }
             }
+            if (workflowRun.getAnalysis() == null) {
+              return;
+            }
             for (final var analysis : workflowRun.getAnalysis()) {
               for (final var key : analysis.getExternalKeys()) {
                 final var lims =
