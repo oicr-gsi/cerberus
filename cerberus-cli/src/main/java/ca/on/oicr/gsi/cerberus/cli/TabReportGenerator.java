@@ -116,12 +116,6 @@ public final class TabReportGenerator implements FileProvenanceConsumer, AutoClo
           .add("=", "\u2300")
           .add("&", "\u2300")
           .build();
-  private static final Function<Collection<String>, String> JOIN =
-      c ->
-          c.stream()
-              .filter(Objects::nonNull)
-              .map(SANITISE_ATTRIBUTE)
-              .collect(Collectors.joining(";"));
   private static final Function<String, String> SANITISE_FIELD =
       new StringSanitizerBuilder()
           .add("\t", "\u2300")
@@ -131,21 +125,6 @@ public final class TabReportGenerator implements FileProvenanceConsumer, AutoClo
           .add(" ", "_")
           .build();
   public static final ZoneId TORONTO_TZ = ZoneId.of("America/Toronto");
-
-  public static <K, V> String transform(
-      Function<K, String> keyTransformer,
-      Function<V, String> valueTransformer,
-      Map<K, ? extends Set<V>> map) {
-    return map.entrySet().stream()
-        .map(
-            entry ->
-                keyTransformer.apply(entry.getKey())
-                    + "="
-                    + entry.getValue().stream()
-                        .map(valueTransformer)
-                        .collect(Collectors.joining("&")))
-        .collect(Collectors.joining(";"));
-  }
 
   public static <K, V> String transform(
       Function<K, String> keyTransformer,
@@ -461,9 +440,9 @@ public final class TabReportGenerator implements FileProvenanceConsumer, AutoClo
     cs.add(SANITISE_FIELD.apply(record.record().getMetatype()));
     cs.add("vidarr:" + record.workflow().getInstanceName() + "/file/" + record.workflow().getId());
     cs.add(transformSimple(SANITISE_ATTRIBUTE, SANITISE_ATTRIBUTE, record.record().getLabels()));
-    cs.add(SANITISE_FIELD.apply(record.record().getFilePath()));
-    cs.add(SANITISE_FIELD.apply(record.record().getMd5sum()));
-    cs.add(Long.toString(record.record().getFileSize()));
+    cs.add(SANITISE_FIELD.apply(record.record().getPath()));
+    cs.add(SANITISE_FIELD.apply(record.record().getMd5()));
+    cs.add(Long.toString(record.record().getSize()));
     cs.add(""); // File description
 
     cs.add("false"); // Path skip
