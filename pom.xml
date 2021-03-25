@@ -8,7 +8,7 @@
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <swagger-core-version>1.5.18</swagger-core-version>
-    <pinery-version>2.17.0</pinery-version>
+    <pinery-version>2.18.0</pinery-version>
   </properties>
   <repositories>
     <repository>
@@ -110,7 +110,7 @@
       <dependency>
         <groupId>ca.on.oicr.gsi</groupId>
         <artifactId>provenance-api</artifactId>
-        <version>1.3.0</version>
+        <version>1.3.1</version>
       </dependency>
       <dependency>
         <groupId>ca.on.oicr.gsi.vidarr</groupId>
