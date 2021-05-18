@@ -35,7 +35,24 @@ public final class VidarrWorkflowRunSource
           .followRedirects(HttpClient.Redirect.NORMAL)
           .connectTimeout(Duration.ofSeconds(20))
           .build();
+  private static final Gauge EPOCH =
+      Gauge.build("cerberus_vidarr_client_epoch", "The last epoch seen from the Vidarr server.")
+          .labelNames("target")
+          .register();
+  private static final Gauge ERROR =
+      Gauge.build(
+              "cerberus_vidarr_client_error", "Whether the last request succeeded Vidarr server.")
+          .labelNames("target")
+          .register();
   private static final ObjectMapper MAPPER = new ObjectMapper();
+  private static final LatencyHistogram REQUEST_TIME =
+      new LatencyHistogram(
+          "cerberus_vidarr_client_request_time", "Time to fetch data from Vidarr.", "target");
+  private static final Gauge TIMESTAMP =
+      Gauge.build(
+              "cerberus_vidarr_client_timestamp", "The last timestamp seen from the Vidarr server.")
+          .labelNames("target")
+          .register();
 
   static {
     MAPPER.registerModule(new JavaTimeModule());
@@ -50,24 +67,6 @@ public final class VidarrWorkflowRunSource
     return IncrementalJoinSource.accumulating(
         new VidarrWorkflowRunSource(instanceName, baseUrl, versionTypes));
   }
-
-  private final Gauge EPOCH =
-      Gauge.build("cerberus_vidarr_client_epoch", "The last epoch seen from the Vidarr server.")
-          .labelNames("target")
-          .register();
-  private final Gauge ERROR =
-      Gauge.build(
-              "cerberus_vidarr_client_error", "Whether the last request succeeded Vidarr server.")
-          .labelNames("target")
-          .register();
-  private final LatencyHistogram REQUEST_TIME =
-      new LatencyHistogram(
-          "cerberus_vidarr_client_request_time", "Time to fetch data from Vidarr.", "target");
-  private final Gauge TIMESTAMP =
-      Gauge.build(
-              "cerberus_vidarr_client_timestamp", "The last timestamp seen from the Vidarr server.")
-          .labelNames("target")
-          .register();
   private final String baseUrl;
   private long epoch;
   private final String instanceName;
