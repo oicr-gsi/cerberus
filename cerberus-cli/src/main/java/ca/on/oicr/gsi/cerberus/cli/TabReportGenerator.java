@@ -109,6 +109,8 @@ public final class TabReportGenerator implements FileProvenanceConsumer, AutoClo
               "LIMS Last Modified");
   public static final DateTimeFormatter DATE_TIME_FORMATTER =
       DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS");
+  public static final DateTimeFormatter LIMS_DATE_TIME_FORMATTER =
+      DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
   private static final ObjectMapper MAPPER = new ObjectMapper();
   private static final Function<String, String> SANITISE_ATTRIBUTE =
       new StringSanitizerBuilder()
@@ -454,7 +456,7 @@ public final class TabReportGenerator implements FileProvenanceConsumer, AutoClo
     cs.add(record.provider());
     cs.add(record.lims().getProvenanceId());
     cs.add(record.lims().getVersion());
-    cs.add(record.lims().getLastModified().toInstant().atZone(ZoneOffset.UTC).toString());
+    cs.add(record.lims().getLastModified().format(LIMS_DATE_TIME_FORMATTER));
     try {
       output.printRecord(cs);
     } catch (IOException e) {
