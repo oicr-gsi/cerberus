@@ -409,9 +409,7 @@ public final class TabReportGenerator implements FileProvenanceConsumer, AutoClo
 
     cs.add(SANITISE_FIELD.apply(record.workflow().getWorkflowName()));
     cs.add("COMPLETE");
-    cs.add(
-        SANITISE_FIELD.apply(
-            record.workflow().getId()));
+    cs.add(SANITISE_FIELD.apply(record.workflow().getId()));
     cs.add(
         StreamSupport.stream(
                 Spliterators.spliteratorUnknownSize(record.workflow().getLabels().fields(), 0),
