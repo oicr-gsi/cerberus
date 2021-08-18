@@ -18,6 +18,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 import java.time.ZoneId;
+import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -410,7 +411,7 @@ public final class TabReportGenerator implements FileProvenanceConsumer, AutoClo
     cs.add("COMPLETE");
     cs.add(
         SANITISE_FIELD.apply(
-            record.workflow().getWorkflowName() + "/" + record.workflow().getWorkflowVersion()));
+            record.workflow().getId()));
     cs.add(
         StreamSupport.stream(
                 Spliterators.spliteratorUnknownSize(record.workflow().getLabels().fields(), 0),
@@ -438,7 +439,7 @@ public final class TabReportGenerator implements FileProvenanceConsumer, AutoClo
     cs.add(""); // Processing status
 
     cs.add(SANITISE_FIELD.apply(record.record().getMetatype()));
-    cs.add("vidarr:" + record.workflow().getInstanceName() + "/file/" + record.workflow().getId());
+    cs.add("vidarr:" + record.workflow().getInstanceName() + "/file/" + record.record().getId());
     cs.add(transformSimple(SANITISE_ATTRIBUTE, SANITISE_ATTRIBUTE, record.record().getLabels()));
     cs.add(SANITISE_FIELD.apply(record.record().getPath()));
     cs.add(SANITISE_FIELD.apply(record.record().getMd5()));
@@ -455,7 +456,7 @@ public final class TabReportGenerator implements FileProvenanceConsumer, AutoClo
     cs.add(record.provider());
     cs.add(record.lims().getProvenanceId());
     cs.add(record.lims().getVersion());
-    cs.add(record.lims().getLastModified().toString());
+    cs.add(record.lims().getLastModified().toInstant().atZone(ZoneOffset.UTC).toString());
     try {
       output.printRecord(cs);
     } catch (IOException e) {
