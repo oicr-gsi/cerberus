@@ -19,13 +19,7 @@ import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Map;
-import java.util.Set;
-import java.util.SortedMap;
-import java.util.SortedSet;
-import java.util.Spliterators;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -397,7 +391,13 @@ public final class TabReportGenerator implements FileProvenanceConsumer, AutoClo
                 })
             .orElse("NoIndex"));
     cs.add(""); // IUS SWIDs
-    cs.add(""); // IUS attributes
+    cs.add(record.workflow().getExternalKeys().stream().filter(
+            key -> key.getVersions()
+                    .getOrDefault("pinery-hash-" + record.formatRevision(), "")
+                    .equals(record.lims().getVersion()))
+            .map(key -> key.getVersions()
+                    .getOrDefault("shesmu-sha1", ""))
+            .collect(Collectors.joining())); // IUS attributes
 
     cs.add(SANITISE_FIELD.apply(record.workflow().getWorkflowName()));
     cs.add(SANITISE_FIELD.apply(record.workflow().getWorkflowVersion()));
