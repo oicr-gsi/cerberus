@@ -40,6 +40,7 @@ public final class RunOnline implements Callable<Integer> {
               .flatMap(pinery -> pinery.getVersions().stream())
               .map(v -> "pinery-hash-" + v)
               .collect(Collectors.toSet());
+      versions.add("shesmu-sha1");
       JoinSource.join(
           JoinSource.all(
               configuration.getVidarr().entrySet().stream()
