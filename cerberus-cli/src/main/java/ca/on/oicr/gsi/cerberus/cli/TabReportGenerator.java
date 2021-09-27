@@ -397,17 +397,11 @@ public final class TabReportGenerator implements FileProvenanceConsumer, AutoClo
                 })
             .orElse("NoIndex"));
     cs.add(""); // IUS SWIDs
-
-    cs.add(record.workflow().getExternalKeys().stream().filter(
-            key -> {
-                var keyId =
-                        key.getVersions()
-                        .getOrDefault("pinery-hash-" + record.formatRevision(), "")
-                        .equals(record.lims().getVersion()) ? key.getId() : "";
-                return key.getId().equals(keyId); // Return keys that match external id of LIMS version key
-            })
-            .map(key -> key.getVersions().getOrDefault("shesmu-sha1", ""))
+    cs.add(record.workflow().getExternalKeys().stream()
+            .filter(key -> key.getId().equals(record.lims().getProvenanceId())) // Get external keys with same ID as LIMS provenance ID, aka the run_lane_libraryID string
+            .map(key -> "shesmu-sha1=" + key.getVersions().get("shesmu-sha1"))
             .collect(Collectors.joining())); // IUS Attributes
+
     cs.add(SANITISE_FIELD.apply(record.workflow().getWorkflowName()));
     cs.add(SANITISE_FIELD.apply(record.workflow().getWorkflowVersion()));
     cs.add(
