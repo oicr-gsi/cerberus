@@ -3,7 +3,9 @@ package ca.on.oicr.gsi.cerberus.fileprovenance;
 import ca.on.oicr.gsi.cerberus.JoinSink;
 import ca.on.oicr.gsi.cerberus.JoinSinkCreator;
 import ca.on.oicr.gsi.cerberus.pinery.LimsProvenanceInfo;
+import ca.on.oicr.gsi.provenance.model.LaneProvenance;
 import ca.on.oicr.gsi.provenance.model.LimsProvenance;
+import ca.on.oicr.gsi.provenance.model.SampleProvenance;
 import ca.on.oicr.gsi.vidarr.api.ExternalId;
 import ca.on.oicr.gsi.vidarr.api.ExternalKey;
 import ca.on.oicr.gsi.vidarr.api.ProvenanceWorkflowRun;
@@ -80,8 +82,30 @@ public interface FileProvenanceConsumer {
                         analysis));
               }
             }
+
+            // if any of the external ids are skipped, then all of provenance records from
+            // this workflowRun should be skipped too
+            final var skip = output.stream().anyMatch(
+                rec -> {
+                  return rec.<Boolean>apply(
+                          new ProvenanceRecord.Mapper<>(SampleProvenance.class) {
+                            @Override
+                            protected Boolean apply(SampleProvenance lims) {
+                              return lims.getSkip();
+                            }
+                          },
+                          new ProvenanceRecord.Mapper<>(LaneProvenance.class) {
+                            @Override
+                            protected Boolean apply(LaneProvenance lims) {
+                              return lims.getSkip();
+                            }
+                          })
+                      .orElse(Boolean.FALSE);
+                }
+            );
+
             final var s = stale;
-            output.forEach(file -> consumer.file(s, file));
+            output.forEach(file -> consumer.file(s, skip, file));
           }
         };
   }
@@ -99,9 +123,11 @@ public interface FileProvenanceConsumer {
   /**
    * Consume a joined file provenance record
    *
-   * @param stale whether the data is stale (a Pinery version mismatch occured for this workflow
+   * @param stale whether the data is stale (a Pinery version mismatch occurred for this workflow
    *     run)
+   * @param skip  whether the data should not be used due to some reason (e.g. the lims record was
+   *              marked as QC failed in Pinery)
    * @param record the joined record
    */
-  void file(boolean stale, ProvenanceRecord<LimsProvenance> record);
+  void file(boolean stale, boolean skip, ProvenanceRecord<LimsProvenance> record);
 }
