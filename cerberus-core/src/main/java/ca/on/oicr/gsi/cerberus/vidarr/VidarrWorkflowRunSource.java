@@ -67,6 +67,7 @@ public final class VidarrWorkflowRunSource
     return IncrementalJoinSource.accumulating(
         new VidarrWorkflowRunSource(instanceName, baseUrl, versionTypes));
   }
+
   private final String baseUrl;
   private long epoch;
   private final String instanceName;
