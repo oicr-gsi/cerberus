@@ -177,7 +177,7 @@ public final class TabReportGenerator implements FileProvenanceConsumer, AutoClo
   }
 
   @Override
-  public void file(boolean stale, ProvenanceRecord<LimsProvenance> record) {
+  public void file(boolean stale, boolean skip, ProvenanceRecord<LimsProvenance> record) {
 
     final var cs = new ArrayList<String>();
     final var sampleAttributes =
@@ -446,8 +446,8 @@ public final class TabReportGenerator implements FileProvenanceConsumer, AutoClo
     cs.add(Long.toString(record.record().getSize()));
     cs.add(""); // File description
 
-    cs.add("false"); // Path skip
-    cs.add("false"); // Skip
+    cs.add(Boolean.toString(skip)); // Path skip
+    cs.add(Boolean.toString(skip)); // Skip
 
     cs.add(stale ? "STALE" : "OKAY");
     cs.add(""); // Status reason
