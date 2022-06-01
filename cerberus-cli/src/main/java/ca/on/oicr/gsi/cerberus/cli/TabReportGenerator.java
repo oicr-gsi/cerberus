@@ -462,7 +462,9 @@ public final class TabReportGenerator implements FileProvenanceConsumer, AutoClo
     cs.add(""); // Status reason
 
     cs.add("");
-    cs.add(record.provider());
+    // here we mangle the "Provider" field to look more similar to the current FPR provider field.
+    // TODO: Ideally a new field of "format revision" would be added in a future update of FPR.
+    cs.add(record.provider() + "-v" + record.formatRevision());
     cs.add(record.lims().getProvenanceId());
     cs.add(record.lims().getVersion());
     cs.add(record.lims().getLastModified().format(LIMS_DATE_TIME_FORMATTER));
