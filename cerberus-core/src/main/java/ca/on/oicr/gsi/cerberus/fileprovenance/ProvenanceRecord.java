@@ -1,5 +1,6 @@
 package ca.on.oicr.gsi.cerberus.fileprovenance;
 
+import ca.on.oicr.gsi.cerberus.pinery.ExternalIdVersion;
 import ca.on.oicr.gsi.provenance.model.LimsProvenance;
 import ca.on.oicr.gsi.vidarr.api.ExternalId;
 import ca.on.oicr.gsi.vidarr.api.ExternalKey;
@@ -47,6 +48,7 @@ public final class ProvenanceRecord<T extends LimsProvenance> {
   private final int formatRevision;
   private final T lims;
   private final String provider;
+  private final ExternalIdVersion currentExternalIdVersion;
   private final ProvenanceAnalysisRecord<ExternalId> record;
   private final ProvenanceWorkflowRun<ExternalKey> workflow;
 
@@ -54,6 +56,7 @@ public final class ProvenanceRecord<T extends LimsProvenance> {
       String provider,
       int formatRevision,
       T lims,
+      ExternalIdVersion currentExternalIdVersion,
       ProvenanceWorkflowRun<ExternalKey> workflow,
       ProvenanceAnalysisRecord<ExternalId> record) {
     this.formatRevision = formatRevision;
@@ -61,6 +64,7 @@ public final class ProvenanceRecord<T extends LimsProvenance> {
     this.workflow = workflow;
     this.record = record;
     this.provider = provider;
+    this.currentExternalIdVersion = currentExternalIdVersion;
   }
 
   /**
@@ -86,7 +90,13 @@ public final class ProvenanceRecord<T extends LimsProvenance> {
   public <S extends T> boolean asSubtype(Class<S> clazz, Consumer<ProvenanceRecord<S>> consumer) {
     if (clazz.isInstance(lims)) {
       consumer.accept(
-          new ProvenanceRecord<>(provider, formatRevision, clazz.cast(lims), workflow, record));
+          new ProvenanceRecord<>(
+              provider,
+              formatRevision,
+              clazz.cast(lims),
+              currentExternalIdVersion,
+              workflow,
+              record));
       return true;
     } else {
       return false;
@@ -103,6 +113,10 @@ public final class ProvenanceRecord<T extends LimsProvenance> {
 
   public String provider() {
     return provider;
+  }
+
+  public ExternalIdVersion currentExternalIdVersion() {
+    return currentExternalIdVersion;
   }
 
   public ProvenanceAnalysisRecord<ExternalId> record() {
