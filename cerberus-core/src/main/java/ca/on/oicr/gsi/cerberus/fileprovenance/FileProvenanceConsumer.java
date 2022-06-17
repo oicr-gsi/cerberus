@@ -2,6 +2,7 @@ package ca.on.oicr.gsi.cerberus.fileprovenance;
 
 import ca.on.oicr.gsi.cerberus.JoinSink;
 import ca.on.oicr.gsi.cerberus.JoinSinkCreator;
+import ca.on.oicr.gsi.cerberus.pinery.ExternalIdVersion;
 import ca.on.oicr.gsi.cerberus.pinery.LimsProvenanceInfo;
 import ca.on.oicr.gsi.provenance.model.LaneProvenance;
 import ca.on.oicr.gsi.provenance.model.LimsProvenance;
@@ -41,7 +42,23 @@ public interface FileProvenanceConsumer {
             final var output = new ArrayList<ProvenanceRecord<LimsProvenance>>();
             var stale = false;
             final var limsInformation = new HashMap<ExternalId, LimsProvenanceInfo>();
+            final var currentExternalIdVersions = new HashMap<ExternalId, ExternalIdVersion>();
             for (final var key : workflowRun.getExternalKeys()) {
+              final var currentExternalIdVersion =
+                  key.getVersions().entrySet().stream()
+                      .filter(e -> e.getKey().startsWith("pinery-hash-"))
+                      .map(
+                          e ->
+                              new ExternalIdVersion(
+                                  key.getProvider(),
+                                  key.getId(),
+                                  Integer.parseInt(e.getKey().replace("pinery-hash-", "")),
+                                  e.getValue()))
+                      .max(ExternalIdVersion::compareTo)
+                      .orElseThrow();
+              currentExternalIdVersions.put(
+                  new ExternalId(key.getProvider(), key.getId()), currentExternalIdVersion);
+
               final var candidates = limsKeys.get(new ExternalId(key.getProvider(), key.getId()));
               if (candidates == null || candidates.isEmpty()) {
                 consumer.error(workflowRun, limsKeys.values().stream().flatMap(List::stream));
@@ -73,11 +90,14 @@ public interface FileProvenanceConsumer {
               for (final var key : analysis.getExternalKeys()) {
                 final var lims =
                     limsInformation.get(new ExternalId(key.getProvider(), key.getId()));
+                final var currentExternalIdVersion =
+                    currentExternalIdVersions.get(new ExternalId(key.getProvider(), key.getId()));
                 output.add(
                     new ProvenanceRecord<>(
                         key.getProvider(),
                         lims.formatRevision(),
                         lims.lims(),
+                        currentExternalIdVersion,
                         workflowRun,
                         analysis));
               }
