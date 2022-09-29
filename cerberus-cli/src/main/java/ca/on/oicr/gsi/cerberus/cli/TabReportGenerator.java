@@ -440,6 +440,7 @@ public final class TabReportGenerator implements FileProvenanceConsumer, AutoClo
     cs.add(
         record.workflow().getInputFiles().stream()
             .map(SANITISE_ATTRIBUTE)
+            .map(i -> i.replace("_", record.workflow().getInstanceName()))
             .collect(Collectors.joining(",")));
 
     cs.add(""); // Processing algorithm
