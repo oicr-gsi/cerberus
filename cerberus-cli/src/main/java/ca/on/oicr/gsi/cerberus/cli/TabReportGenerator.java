@@ -45,7 +45,7 @@ public final class TabReportGenerator implements FileProvenanceConsumer, AutoClo
           .withNullString("")
           .withRecordSeparator('\n')
           .withHeader(
-              "Completed Date",
+              "Last Modified",
               "Study Title",
               "Study SWID",
               "Study Attributes",
