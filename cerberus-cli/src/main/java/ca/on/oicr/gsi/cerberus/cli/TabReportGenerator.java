@@ -45,7 +45,7 @@ public final class TabReportGenerator implements FileProvenanceConsumer, AutoClo
           .withNullString("")
           .withRecordSeparator('\n')
           .withHeader(
-              "Last Modified",
+              "Completed Date",
               "Study Title",
               "Study SWID",
               "Study Attributes",
@@ -198,7 +198,7 @@ public final class TabReportGenerator implements FileProvenanceConsumer, AutoClo
     cs.add(
         record
             .workflow()
-            .getModified()
+            .getCompleted()
             .withZoneSameInstant(TORONTO_TZ)
             .format(DATE_TIME_FORMATTER));
 
