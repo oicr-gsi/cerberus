@@ -35,5 +35,5 @@ the value is the URL of that instance.
 The Cerberus file provenance client can be used to produce a joined file
 provenance TSV in the traditional format using:
 
-    java -m ca.on.oicr.gsi.cerberus.cli/ca.on.oicr.gsi.cerberus.Main online \
+    java --module-path "$(ls */target/*.jar */target/dependency/*.jar | tr '\n' :)" -m ca.on.oicr.gsi.cerberus.cli/ca.on.oicr.gsi.cerberus.Main online \
       -c config.json -o output.json
