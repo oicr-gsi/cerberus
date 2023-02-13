@@ -7,6 +7,10 @@ import ca.on.oicr.gsi.cerberus.pinery.PineryProvenanceSource;
 import ca.on.oicr.gsi.cerberus.vidarr.VidarrWorkflowRunSource;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.File;
+import java.nio.file.FileAlreadyExistsException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.concurrent.Callable;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -34,7 +38,13 @@ public final class RunOnline implements Callable<Integer> {
     final var configuration =
         new ObjectMapper().readValue(new File(configurationFileName), Configuration.class);
 
-    try (final var output = new TabReportGenerator(this.outputFileName)) {
+    String tempOutputFileName = this.outputFileName + "~";
+
+    if (new File(this.outputFileName).exists()) {
+      throw new FileAlreadyExistsException(this.outputFileName);
+    }
+
+    try (final var output = new TabReportGenerator(tempOutputFileName)) {
       final var versions =
           configuration.getPinery().values().stream()
               .flatMap(pinery -> pinery.getVersions().stream())
@@ -58,6 +68,10 @@ public final class RunOnline implements Callable<Integer> {
           LimsProvenanceInfo::key,
           FileProvenanceConsumer.of(output));
     }
+    Files.copy(
+        Paths.get(tempOutputFileName),
+        Paths.get(this.outputFileName),
+        StandardCopyOption.COPY_ATTRIBUTES);
 
     return 0;
   }

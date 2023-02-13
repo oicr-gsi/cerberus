@@ -28,7 +28,7 @@ public interface IncrementalJoinSource<T> {
       private List<T> state = List.of();
 
       @Override
-      public Stream<T> fetch() {
+      public Stream<T> fetch() throws Exception {
         state =
             source
                 .update()
@@ -68,7 +68,7 @@ public interface IncrementalJoinSource<T> {
       private List<T> state = List.of();
 
       @Override
-      public Stream<T> fetch() {
+      public Stream<T> fetch() throws Exception {
         state =
             source
                 .update()
@@ -125,7 +125,7 @@ public interface IncrementalJoinSource<T> {
       private List<T> state = List.of();
 
       @Override
-      public Stream<T> fetch() {
+      public Stream<T> fetch() throws Exception {
         state =
             source
                 .update()
@@ -156,5 +156,5 @@ public interface IncrementalJoinSource<T> {
    *
    * @return the resulting data
    */
-  UpdateResult<T> update();
+  UpdateResult<T> update() throws Exception;
 }
