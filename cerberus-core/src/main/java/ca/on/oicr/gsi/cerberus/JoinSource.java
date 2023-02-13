@@ -29,7 +29,16 @@ public interface JoinSource<T> {
    */
   @SafeVarargs
   static <T> JoinSource<T> all(JoinSource<? extends T>... sources) {
-    return () -> Stream.of(sources).flatMap(JoinSource::fetch);
+    return () ->
+        Stream.of(sources)
+            .flatMap(
+                (JoinSource<? extends T> joinSource) -> {
+                  try {
+                    return joinSource.fetch();
+                  } catch (Exception e) {
+                    throw new RuntimeException(e);
+                  }
+                });
   }
 
   /**
@@ -41,7 +50,16 @@ public interface JoinSource<T> {
    */
   static <T> JoinSource<T> all(Stream<JoinSource<? extends T>> sources) {
     final var s = sources.collect(Collectors.toList());
-    return () -> s.stream().flatMap(JoinSource::fetch);
+    return () ->
+        s.stream()
+            .flatMap(
+                (JoinSource<? extends T> joinSource) -> {
+                  try {
+                    return joinSource.fetch();
+                  } catch (Exception e) {
+                    throw new RuntimeException(e);
+                  }
+                });
   }
 
   /**
@@ -71,7 +89,7 @@ public interface JoinSource<T> {
       private int remainingFailures = maxConsecutiveFailures.orElse(Integer.MAX_VALUE);
 
       @Override
-      public Stream<T> fetch() {
+      public Stream<T> fetch() throws Exception {
         try {
           cache = source.fetch().collect(Collectors.toList());
           remainingFailures = maxConsecutiveFailures.orElse(Integer.MAX_VALUE);
@@ -107,7 +125,8 @@ public interface JoinSource<T> {
       JoinSource<R> right,
       Function<L, Stream<K>> leftKey,
       Function<R, K> rightKey,
-      JoinSinkCreator<L, R> sinkCreator) {
+      JoinSinkCreator<L, R> sinkCreator)
+      throws Exception {
     final var rightMap =
         right.fetch().collect(Collectors.groupingBy(rightKey, Collectors.toList()));
     left.fetch()
@@ -177,5 +196,5 @@ public interface JoinSource<T> {
   }
 
   /** Provided the stored dataa */
-  Stream<T> fetch();
+  Stream<T> fetch() throws Exception;
 }

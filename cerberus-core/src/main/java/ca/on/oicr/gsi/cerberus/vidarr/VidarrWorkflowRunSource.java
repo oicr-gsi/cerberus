@@ -16,13 +16,13 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import io.prometheus.client.Gauge;
+import java.net.ConnectException;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpRequest.BodyPublishers;
 import java.time.Duration;
 import java.util.EnumSet;
-import java.util.List;
 import java.util.Set;
 import java.util.stream.Stream;
 
@@ -81,7 +81,7 @@ public final class VidarrWorkflowRunSource
   }
 
   @Override
-  public UpdateResult<ProvenanceWorkflowRun<ExternalKey>> update() {
+  public UpdateResult<ProvenanceWorkflowRun<ExternalKey>> update() throws Exception {
     try (final var ignored = REQUEST_TIME.start(baseUrl)) {
       final var request = new AnalysisProvenanceRequest();
       request.setAnalysisTypes(EnumSet.of(AnalysisOutputType.FILE));
@@ -101,7 +101,7 @@ public final class VidarrWorkflowRunSource
                   MAPPER, new TypeReference<AnalysisProvenanceResponse<ExternalKey>>() {}));
       if (response.statusCode() != 200) {
         ERROR.labels(baseUrl).set(1);
-        return UpdateResult.incremental(List.of());
+        throw new ConnectException(response.toString());
       }
       final var body = response.body().get();
       EPOCH.labels(baseUrl).set(body.getEpoch());
@@ -120,8 +120,7 @@ public final class VidarrWorkflowRunSource
       }
     } catch (Exception e) {
       ERROR.labels(baseUrl).set(1);
-      e.printStackTrace();
-      return UpdateResult.incremental(List.of());
+      throw e;
     }
   }
 }

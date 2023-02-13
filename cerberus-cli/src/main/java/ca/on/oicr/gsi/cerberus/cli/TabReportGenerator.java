@@ -11,6 +11,7 @@ import ca.on.oicr.gsi.vidarr.api.ExternalKey;
 import ca.on.oicr.gsi.vidarr.api.ProvenanceWorkflowRun;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.io.File;
 import java.io.IOError;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -155,6 +156,8 @@ public final class TabReportGenerator implements FileProvenanceConsumer, AutoClo
   private final CSVPrinter output;
 
   public TabReportGenerator(String outputFileName) throws IOException {
+    File outputFile = new File(outputFileName);
+    outputFile.deleteOnExit();
     output =
         new CSVPrinter(
             new PrintWriter(
