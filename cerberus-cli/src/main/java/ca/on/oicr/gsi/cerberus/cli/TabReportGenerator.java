@@ -93,7 +93,7 @@ public final class TabReportGenerator implements FileProvenanceConsumer, AutoClo
               "File SWID",
               "File Attributes",
               "File Path",
-              "File Md5sum",
+              "File Md5sum", // Technically, this can now include any type of checksum
               "File Size",
               "File Description",
               "Path Skip",
@@ -455,7 +455,7 @@ public final class TabReportGenerator implements FileProvenanceConsumer, AutoClo
     cs.add("vidarr:" + record.workflow().getInstanceName() + "/file/" + record.record().getId());
     cs.add(transformSimple(SANITISE_ATTRIBUTE, SANITISE_ATTRIBUTE, record.record().getLabels()));
     cs.add(SANITISE_FIELD.apply(record.record().getPath()));
-    cs.add(SANITISE_FIELD.apply(record.record().getMd5()));
+    cs.add(SANITISE_FIELD.apply(record.record().getChecksum()));
     cs.add(Long.toString(record.record().getSize()));
     cs.add(""); // File description
 
