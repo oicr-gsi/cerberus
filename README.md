@@ -20,7 +20,10 @@ create a configuration file ending in `.cerberus` as follows:
        },
        "vidarr": {
          "prod": "http://vidarr-prod.example.com:8000"
-       }
+       },
+       "ignore": [
+         "example-bad-provider"
+       ]
      }
 
 The `"pinery"` section describes all Pinery instances that can be used LIMS
@@ -31,6 +34,11 @@ the `"versions"` list.
 The `"vidarr"` section describes all the Vidarr instances that should be used
 as file sources. The keys are the _internal name_ of that Vidarr instance and
 the value is the URL of that instance.
+
+The "ignore" section contains all the LIMS provider names which are present
+in the vidarr instances' external keys but should NOT be merged when building
+file provenance. If a Vidarr workflow run contains a single external key with data
+from one of these ignore providers, the entire workflow run will be excluded.
 
 The Cerberus file provenance client can be used to produce a joined file
 provenance TSV in the traditional format using:

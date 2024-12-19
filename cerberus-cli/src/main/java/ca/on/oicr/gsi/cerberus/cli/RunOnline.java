@@ -11,6 +11,9 @@ import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.Callable;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -45,6 +48,9 @@ public final class RunOnline implements Callable<Integer> {
     }
 
     try (final var output = new TabReportGenerator(tempOutputFileName)) {
+
+      List<String> ignoreProviders =
+          Objects.requireNonNullElse(configuration.getIgnore(), new ArrayList<>());
       final var versions =
           configuration.getPinery().values().stream()
               .flatMap(pinery -> pinery.getVersions().stream())
@@ -54,7 +60,10 @@ public final class RunOnline implements Callable<Integer> {
       JoinSource.join(
           JoinSource.all(
               configuration.getVidarr().entrySet().stream()
-                  .map(e -> VidarrWorkflowRunSource.of(e.getKey(), e.getValue(), versions))),
+                  .map(
+                      e ->
+                          VidarrWorkflowRunSource.of(
+                              e.getKey(), e.getValue(), versions, ignoreProviders))),
           JoinSource.all(
               configuration.getPinery().entrySet().stream()
                   .flatMap(
