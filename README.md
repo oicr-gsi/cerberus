@@ -35,8 +35,10 @@ The `"vidarr"` section describes all the Vidarr instances that should be used
 as file sources. The keys are the _internal name_ of that Vidarr instance and
 the value is the URL of that instance.
 
-The `"ignore"` section contains all the LIMS data sources which are present 
-in the vidarr instances but should NOT be merged.
+The "ignore" section contains all the LIMS provider names which are present
+in the vidarr instances' external keys but should NOT be merged when building
+file provenance. If a Vidarr workflow run contains a single external key with data
+from one of these ignore providers, the entire workflow run will be excluded.
 
 The Cerberus file provenance client can be used to produce a joined file
 provenance TSV in the traditional format using:
