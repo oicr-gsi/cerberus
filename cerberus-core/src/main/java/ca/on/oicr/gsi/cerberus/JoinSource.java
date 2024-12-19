@@ -195,6 +195,6 @@ public interface JoinSource<T> {
     return () -> source.fetch().map(mapper);
   }
 
-  /** Provided the stored dataa */
+  /** Provided the stored data */
   Stream<T> fetch() throws Exception;
 }

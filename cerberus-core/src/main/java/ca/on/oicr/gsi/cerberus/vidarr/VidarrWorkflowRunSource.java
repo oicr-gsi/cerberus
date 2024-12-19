@@ -23,7 +23,9 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpRequest.BodyPublishers;
 import java.time.Duration;
 import java.util.EnumSet;
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /** Incrementally fetch Vidarr workflow run data */
@@ -63,9 +65,9 @@ public final class VidarrWorkflowRunSource
   }
 
   public static JoinSource<ProvenanceWorkflowRun<ExternalKey>> of(
-      String instanceName, String baseUrl, Set<String> versionTypes) {
+      String instanceName, String baseUrl, Set<String> versionTypes, List<String> ignoreProviders) {
     return IncrementalJoinSource.accumulating(
-        new VidarrWorkflowRunSource(instanceName, baseUrl, versionTypes));
+        new VidarrWorkflowRunSource(instanceName, baseUrl, versionTypes, ignoreProviders));
   }
 
   private final String baseUrl;
@@ -73,11 +75,14 @@ public final class VidarrWorkflowRunSource
   private final String instanceName;
   private long lastTime;
   private final Set<String> versionTypes;
+  private final List<String> ignoreProviders;
 
-  public VidarrWorkflowRunSource(String instanceName, String baseUrl, Set<String> versionTypes) {
+  public VidarrWorkflowRunSource(
+      String instanceName, String baseUrl, Set<String> versionTypes, List<String> ignoreProviders) {
     this.instanceName = instanceName;
     this.baseUrl = baseUrl;
     this.versionTypes = versionTypes;
+    this.ignoreProviders = ignoreProviders;
   }
 
   @Override
@@ -107,16 +112,27 @@ public final class VidarrWorkflowRunSource
       EPOCH.labels(baseUrl).set(body.getEpoch());
       TIMESTAMP.labels(baseUrl).set(body.getTimestamp());
       ERROR.labels(baseUrl).set(0);
-      for (final var workflowRun : body.getResults()) {
-        workflowRun.setInstanceName(instanceName);
-      }
+      List<ProvenanceWorkflowRun<ExternalKey>> validBodyResults;
+      validBodyResults =
+          body.getResults().stream()
+              .filter(
+                  workflowRun ->
+                      workflowRun.getExternalKeys().stream()
+                          .noneMatch(
+                              externalKey -> ignoreProviders.contains(externalKey.getProvider())))
+              .map(
+                  workflowRun -> {
+                    workflowRun.setInstanceName(instanceName);
+                    return workflowRun;
+                  })
+              .collect(Collectors.toList());
       if (body.getEpoch() == epoch) {
         lastTime = body.getTimestamp();
-        return UpdateResult.incremental(body.getResults());
+        return UpdateResult.incremental(validBodyResults);
       } else {
         epoch = body.getEpoch();
         lastTime = body.getTimestamp();
-        return UpdateResult.restart(body.getResults());
+        return UpdateResult.restart(validBodyResults);
       }
     } catch (Exception e) {
       ERROR.labels(baseUrl).set(1);
