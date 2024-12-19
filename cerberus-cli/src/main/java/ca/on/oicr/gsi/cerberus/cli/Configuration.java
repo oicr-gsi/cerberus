@@ -1,13 +1,14 @@
 package ca.on.oicr.gsi.cerberus.cli;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 public final class Configuration {
 
   private Map<String, PineryConfiguration> pinery;
   private Map<String, String> vidarr;
-  private ArrayList<String> ignore;
+  private List<String> ignore;
 
   public Map<String, PineryConfiguration> getPinery() {
     return pinery;
@@ -17,7 +18,7 @@ public final class Configuration {
     return vidarr;
   }
 
-  public ArrayList<String> getIgnore() {
+  public List<String> getIgnore() {
     return ignore;
   }
 

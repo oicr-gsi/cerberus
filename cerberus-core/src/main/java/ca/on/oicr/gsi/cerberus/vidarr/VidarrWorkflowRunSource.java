@@ -24,6 +24,7 @@ import java.net.http.HttpRequest.BodyPublishers;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.EnumSet;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Stream;
 
@@ -64,10 +65,7 @@ public final class VidarrWorkflowRunSource
   }
 
   public static JoinSource<ProvenanceWorkflowRun<ExternalKey>> of(
-      String instanceName,
-      String baseUrl,
-      Set<String> versionTypes,
-      ArrayList<String> ignoreProviders) {
+      String instanceName, String baseUrl, Set<String> versionTypes, List<String> ignoreProviders) {
     return IncrementalJoinSource.accumulating(
         new VidarrWorkflowRunSource(instanceName, baseUrl, versionTypes, ignoreProviders));
   }
@@ -77,13 +75,10 @@ public final class VidarrWorkflowRunSource
   private final String instanceName;
   private long lastTime;
   private final Set<String> versionTypes;
-  private final ArrayList<String> ignoreProviders;
+  private final List<String> ignoreProviders;
 
   public VidarrWorkflowRunSource(
-      String instanceName,
-      String baseUrl,
-      Set<String> versionTypes,
-      ArrayList<String> ignoreProviders) {
+      String instanceName, String baseUrl, Set<String> versionTypes, List<String> ignoreProviders) {
     this.instanceName = instanceName;
     this.baseUrl = baseUrl;
     this.versionTypes = versionTypes;

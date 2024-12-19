@@ -12,6 +12,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.Callable;
 import java.util.stream.Collectors;
@@ -48,7 +49,7 @@ public final class RunOnline implements Callable<Integer> {
 
     try (final var output = new TabReportGenerator(tempOutputFileName)) {
 
-      ArrayList<String> ignoreProviders =
+      List<String> ignoreProviders =
           Objects.requireNonNullElse(configuration.getIgnore(), new ArrayList<>());
       final var versions =
           configuration.getPinery().values().stream()
