@@ -9,7 +9,7 @@
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <swagger-core-version>1.5.18</swagger-core-version>
-    <pinery-version>[2.19.0, )</pinery-version>
+    <pinery-version>3.0.1</pinery-version>
   </properties>
   <repositories>
     <repository>
@@ -51,22 +51,22 @@
       <dependency>
         <groupId>com.fasterxml.jackson.core</groupId>
         <artifactId>jackson-core</artifactId>
-        <version>[2.11.0, )</version>
+        <version>2.19.0</version>
       </dependency>
       <dependency>
         <groupId>com.fasterxml.jackson.core</groupId>
         <artifactId>jackson-databind</artifactId>
-        <version>[2.11.0, )</version>
+        <version>2.19.0</version>
       </dependency>
       <dependency>
         <groupId>com.fasterxml.jackson.core</groupId>
         <artifactId>jackson-annotations</artifactId>
-        <version>[2.11.0, )</version>
+        <version>2.19.0</version>
       </dependency>
       <dependency>
         <groupId>com.fasterxml.jackson.datatype</groupId>
         <artifactId>jackson-datatype-jsr310</artifactId>
-        <version>[2.11.0, )</version>
+        <version>2.19.0</version>
       </dependency>
       <dependency>
         <groupId>ca.on.oicr.gsi.cerberus</groupId>
@@ -111,7 +111,7 @@
       <dependency>
         <groupId>ca.on.oicr.gsi.vidarr</groupId>
         <artifactId>vidarr-pluginapi</artifactId>
-        <version>2.0.2</version>
+        <version>2.1.0</version>
       </dependency>
       <dependency>
         <groupId>org.apache.commons</groupId>
