@@ -23,6 +23,9 @@ create a configuration file ending in `.cerberus` as follows:
        },
        "ignore": [
          "example-bad-provider"
+       ],
+       "excludeWorkflowsFromProvenance": [
+         "example-proliferating-workflow"
        ]
      }
 
@@ -39,6 +42,12 @@ The `"ignore"` section contains all the LIMS provider names which are present
 in the Vidarr instances' external keys but should NOT be merged when building
 file provenance. If a Vidarr workflow run contains a single external key with data
 from one of these ignore providers, the entire workflow run will be excluded.
+
+The `"excludeWorkflowsFromProvenance"` list contains all the workflows to
+be excluded when requesting analysis provenance (typically used for
+workflows with a large number of inputs, as file provenance creates one row
+per workflow run + unique file + unique input, so workflows with large numbers
+of inputs can cause the size of file provenance to balloon rapidly)
 
 To build Cerberus locally:
 

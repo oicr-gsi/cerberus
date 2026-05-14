@@ -3,12 +3,14 @@ package ca.on.oicr.gsi.cerberus.cli;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public final class Configuration {
 
   private Map<String, PineryConfiguration> pinery;
   private Map<String, String> vidarr;
   private List<String> ignore;
+  private Set<String> excludeWorkflowsFromProvenance;
 
   public Map<String, PineryConfiguration> getPinery() {
     return pinery;
@@ -22,6 +24,10 @@ public final class Configuration {
     return ignore;
   }
 
+  public Set<String> getExcludeWorkflowsFromProvenance() {
+    return excludeWorkflowsFromProvenance;
+  }
+
   public void setPinery(Map<String, PineryConfiguration> pinery) {
     this.pinery = pinery;
   }
@@ -32,5 +38,9 @@ public final class Configuration {
 
   public void setIgnore(ArrayList<String> ignore) {
     this.ignore = ignore;
+  }
+
+  public void setExcludeWorkflowsFromProvenance(Set<String> excludeWorkflowsFromProvenance) {
+    this.excludeWorkflowsFromProvenance = excludeWorkflowsFromProvenance;
   }
 }
