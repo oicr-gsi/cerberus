@@ -65,9 +65,14 @@ public final class VidarrWorkflowRunSource
   }
 
   public static JoinSource<ProvenanceWorkflowRun<ExternalKey>> of(
-      String instanceName, String baseUrl, Set<String> versionTypes, List<String> ignoreProviders) {
+      String instanceName,
+      String baseUrl,
+      Set<String> versionTypes,
+      List<String> ignoreProviders,
+      Set<String> excludeWorkflowsFromProvenance) {
     return IncrementalJoinSource.accumulating(
-        new VidarrWorkflowRunSource(instanceName, baseUrl, versionTypes, ignoreProviders));
+        new VidarrWorkflowRunSource(
+            instanceName, baseUrl, versionTypes, ignoreProviders, excludeWorkflowsFromProvenance));
   }
 
   private final String baseUrl;
@@ -76,13 +81,20 @@ public final class VidarrWorkflowRunSource
   private long lastTime;
   private final Set<String> versionTypes;
   private final List<String> ignoreProviders;
+  private final Set<String> excludeWorkflowsFromProvenance;
 
   public VidarrWorkflowRunSource(
-      String instanceName, String baseUrl, Set<String> versionTypes, List<String> ignoreProviders) {
+      String instanceName,
+      String baseUrl,
+      Set<String> versionTypes,
+      List<String> ignoreProviders,
+      Set<String> excludeWorkflowsFromProvenance) {
     this.instanceName = instanceName;
     this.baseUrl = baseUrl;
     this.versionTypes = versionTypes;
     this.ignoreProviders = ignoreProviders;
+    this.excludeWorkflowsFromProvenance =
+        excludeWorkflowsFromProvenance == null ? Set.of() : excludeWorkflowsFromProvenance;
   }
 
   @Override
@@ -94,6 +106,7 @@ public final class VidarrWorkflowRunSource
       request.setTimestamp(lastTime);
       request.setVersionPolicy(VersionPolicy.LATEST);
       request.setVersionTypes(versionTypes);
+      request.setExcludeWorkflows(excludeWorkflowsFromProvenance);
       final var response =
           CLIENT.send(
               HttpRequest.newBuilder()

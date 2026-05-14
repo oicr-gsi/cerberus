@@ -12,8 +12,10 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 import java.util.concurrent.Callable;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -57,13 +59,20 @@ public final class RunOnline implements Callable<Integer> {
               .map(v -> "pinery-hash-" + v)
               .collect(Collectors.toSet());
       versions.add("shesmu-sha1");
+      final Set<String> excludeWorkflowsFromProvenance =
+          Objects.requireNonNullElse(
+              configuration.getExcludeWorkflowsFromProvenance(), new HashSet<>());
       JoinSource.join(
           JoinSource.all(
               configuration.getVidarr().entrySet().stream()
                   .map(
                       e ->
                           VidarrWorkflowRunSource.of(
-                              e.getKey(), e.getValue(), versions, ignoreProviders))),
+                              e.getKey(),
+                              e.getValue(),
+                              versions,
+                              ignoreProviders,
+                              excludeWorkflowsFromProvenance))),
           JoinSource.all(
               configuration.getPinery().entrySet().stream()
                   .flatMap(
