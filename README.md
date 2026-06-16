@@ -62,3 +62,6 @@ provenance TSV in the traditional format using:
         -c config.json -o output.tsv.gz
 
 
+## Prerequisites
+
+Cerberus requires Java 21.
