@@ -9,7 +9,7 @@
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <swagger-core-version>1.5.18</swagger-core-version>
-    <pinery-version>3.0.1</pinery-version>
+    <pinery-version>3.4.0</pinery-version>
   </properties>
   <repositories>
     <repository>
