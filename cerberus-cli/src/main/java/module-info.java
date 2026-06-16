@@ -10,7 +10,7 @@ module ca.on.oicr.gsi.cerberus.cli {
   requires ca.on.oicr.gsi.provenance.api;
   requires ca.on.oicr.gsi.vidarr.pluginapi;
   requires com.fasterxml.jackson.annotation;
-  requires com.fasterxml.jackson.databind;
+  requires tools.jackson.databind;
   requires commons.csv;
   requires info.picocli;
   requires org.apache.commons.lang3;
