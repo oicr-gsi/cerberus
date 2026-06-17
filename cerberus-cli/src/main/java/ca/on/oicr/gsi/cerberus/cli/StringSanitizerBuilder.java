@@ -5,7 +5,9 @@ import java.util.List;
 import java.util.function.Function;
 import org.apache.commons.lang3.StringUtils;
 
-/** @author mlaszloffy */
+/**
+ * @author mlaszloffy
+ */
 final class StringSanitizerBuilder {
 
   private final List<String> searchList;

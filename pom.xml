@@ -10,6 +10,7 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <swagger-core-version>1.5.18</swagger-core-version>
     <pinery-version>3.4.0</pinery-version>
+    <git-code-format-maven-plugin-version>6.0</git-code-format-maven-plugin-version>
   </properties>
   <repositories>
     <repository>
@@ -156,7 +157,7 @@
       <plugin>
         <groupId>com.cosium.code</groupId>
         <artifactId>git-code-format-maven-plugin</artifactId>
-        <version>3.3</version>
+        <version>${git-code-format-maven-plugin-version}</version>
         <executions>
           <execution>
             <id>install-formatter-hook</id>
@@ -171,6 +172,13 @@
             </goals>
           </execution>
         </executions>
+        <dependencies>
+          <dependency>
+            <groupId>com.cosium.code</groupId>
+            <artifactId>google-java-format</artifactId>
+            <version>${git-code-format-maven-plugin-version}</version>
+          </dependency>
+        </dependencies>
       </plugin>
     </plugins>
   </build>

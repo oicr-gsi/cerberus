@@ -97,6 +97,7 @@ public interface JoinSink<T> {
    * @param item the record to be consumed
    */
   void accept(T item);
+
   /** No more records are available */
   void finished();
 }
