@@ -6,9 +6,6 @@ import ca.on.oicr.gsi.provenance.model.LimsProvenance;
 import ca.on.oicr.gsi.vidarr.JsonBodyHandler;
 import ca.on.oicr.ws.dto.LaneProvenanceDto;
 import ca.on.oicr.ws.dto.SampleProvenanceDto;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -16,6 +13,11 @@ import java.time.Duration;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Stream;
+import tools.jackson.core.type.TypeReference;
+import tools.jackson.databind.DeserializationFeature;
+import tools.jackson.databind.SerializationFeature;
+import tools.jackson.databind.cfg.DateTimeFeature;
+import tools.jackson.databind.json.JsonMapper;
 
 /** Perform a fetch from Pinery for a particular LIMS value type */
 public final class PineryProvenanceSource<T extends LimsProvenance>
@@ -32,11 +34,12 @@ public final class PineryProvenanceSource<T extends LimsProvenance>
           "The time required to fetch libraries from Pinery.",
           "kind",
           "target");
-  private static final ObjectMapper MAPPER = new ObjectMapper();
-
-  static {
-    MAPPER.registerModule(new JavaTimeModule());
-  }
+  private static final JsonMapper MAPPER =
+      JsonMapper.builder()
+          .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
+          .configure(DateTimeFeature.WRITE_DATES_AS_TIMESTAMPS, true)
+          .configure(SerializationFeature.ORDER_MAP_ENTRIES_BY_KEYS, true)
+          .build();
 
   /**
    * Get lane provenance
@@ -84,7 +87,7 @@ public final class PineryProvenanceSource<T extends LimsProvenance>
   }
 
   @Override
-  public final Stream<LimsProvenanceInfo> fetch() {
+  public Stream<LimsProvenanceInfo> fetch() {
     try (final var ignored = FETCH_TIME.start(kind, baseUrl)) {
       return versions.stream()
           .flatMap(

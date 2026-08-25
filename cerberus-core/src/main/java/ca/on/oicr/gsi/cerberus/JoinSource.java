@@ -1,8 +1,5 @@
 package ca.on.oicr.gsi.cerberus;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import java.io.IOException;
 import java.io.InputStream;
 import java.time.Duration;
 import java.time.Instant;
@@ -12,6 +9,8 @@ import java.util.OptionalInt;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import tools.jackson.core.type.TypeReference;
+import tools.jackson.databind.json.JsonMapper;
 
 /**
  * Read records as required for joining
@@ -49,7 +48,7 @@ public interface JoinSource<T> {
    * @return a source that aggregates the results from all the provided sources
    */
   static <T> JoinSource<T> all(Stream<JoinSource<? extends T>> sources) {
-    final var s = sources.collect(Collectors.toList());
+    final var s = sources.toList();
     return () ->
         s.stream()
             .flatMap(
@@ -89,7 +88,7 @@ public interface JoinSource<T> {
       private int remainingFailures = maxConsecutiveFailures.orElse(Integer.MAX_VALUE);
 
       @Override
-      public Stream<T> fetch() throws Exception {
+      public Stream<T> fetch() {
         try {
           cache = source.fetch().collect(Collectors.toList());
           remainingFailures = maxConsecutiveFailures.orElse(Integer.MAX_VALUE);
@@ -150,8 +149,7 @@ public interface JoinSource<T> {
    * @param <T> the type of records being loaded
    * @return a fixed source that will always produce the same data read from the JSON file
    */
-  static <T> JoinSource<T> jsonFile(InputStream input, ObjectMapper mapper, Class<T> type)
-      throws IOException {
+  static <T> JoinSource<T> jsonFile(InputStream input, JsonMapper mapper, Class<T> type) {
     @SuppressWarnings("unchecked")
     final var output =
         (List<T>)
@@ -169,8 +167,7 @@ public interface JoinSource<T> {
    * @param <T> the type of records being loaded
    * @return a fixed source that will always produce the same data read from the JSON file
    */
-  static <T> JoinSource<T> jsonFile(InputStream input, ObjectMapper mapper, TypeReference<T> type)
-      throws IOException {
+  static <T> JoinSource<T> jsonFile(InputStream input, JsonMapper mapper, TypeReference<T> type) {
     @SuppressWarnings("unchecked")
     final var output =
         (List<T>)
