@@ -5,7 +5,6 @@ import ca.on.oicr.gsi.cerberus.fileprovenance.FileProvenanceConsumer;
 import ca.on.oicr.gsi.cerberus.pinery.LimsProvenanceInfo;
 import ca.on.oicr.gsi.cerberus.pinery.PineryProvenanceSource;
 import ca.on.oicr.gsi.cerberus.vidarr.VidarrWorkflowRunSource;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.File;
 import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
@@ -20,6 +19,10 @@ import java.util.concurrent.Callable;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import picocli.CommandLine;
+import tools.jackson.databind.DeserializationFeature;
+import tools.jackson.databind.SerializationFeature;
+import tools.jackson.databind.cfg.DateTimeFeature;
+import tools.jackson.databind.json.JsonMapper;
 
 @CommandLine.Command(
     name = "online",
@@ -38,10 +41,17 @@ public final class RunOnline implements Callable<Integer> {
       description = "The location for the TSV output")
   private String outputFileName;
 
+  private static final JsonMapper MAPPER =
+      JsonMapper.builder()
+          .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
+          .configure(DateTimeFeature.WRITE_DATES_AS_TIMESTAMPS, true)
+          .configure(SerializationFeature.ORDER_MAP_ENTRIES_BY_KEYS, true)
+          .build();
+
   @Override
   public Integer call() throws Exception {
     final var configuration =
-        new ObjectMapper().readValue(new File(configurationFileName), Configuration.class);
+        MAPPER.readValue(new File(configurationFileName), Configuration.class);
 
     String tempOutputFileName = this.outputFileName + "~";
 

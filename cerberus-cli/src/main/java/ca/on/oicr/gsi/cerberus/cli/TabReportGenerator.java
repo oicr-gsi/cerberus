@@ -9,8 +9,6 @@ import ca.on.oicr.gsi.provenance.model.LimsProvenance;
 import ca.on.oicr.gsi.provenance.model.SampleProvenance;
 import ca.on.oicr.gsi.vidarr.api.ExternalKey;
 import ca.on.oicr.gsi.vidarr.api.ProvenanceWorkflowRun;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.File;
 import java.io.IOError;
 import java.io.IOException;
@@ -34,6 +32,8 @@ import java.util.stream.StreamSupport;
 import java.util.zip.GZIPOutputStream;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
+import tools.jackson.core.JacksonException;
+import tools.jackson.databind.json.JsonMapper;
 
 /**
  * Consume file provenance records and write them to a GZIP-compressed TSV table compatible with the
@@ -109,7 +109,7 @@ public final class TabReportGenerator implements FileProvenanceConsumer, AutoClo
       DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS");
   public static final DateTimeFormatter LIMS_DATE_TIME_FORMATTER =
       DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
-  private static final ObjectMapper MAPPER = new ObjectMapper();
+  private static final JsonMapper MAPPER = JsonMapper.builder().build();
   private static final Function<String, String> SANITISE_ATTRIBUTE =
       new StringSanitizerBuilder()
           .add("\t", " ")
@@ -426,7 +426,8 @@ public final class TabReportGenerator implements FileProvenanceConsumer, AutoClo
     cs.add(SANITISE_FIELD.apply(record.workflow().getId()));
     cs.add(
         StreamSupport.stream(
-                Spliterators.spliteratorUnknownSize(record.workflow().getLabels().fields(), 0),
+                Spliterators.spliteratorUnknownSize(
+                    record.workflow().getLabels().properties().iterator(), 0),
                 false)
             .map(
                 entry -> {
@@ -434,7 +435,7 @@ public final class TabReportGenerator implements FileProvenanceConsumer, AutoClo
                     return SANITISE_ATTRIBUTE.apply(entry.getKey())
                         + "="
                         + MAPPER.writeValueAsString(entry.getValue());
-                  } catch (JsonProcessingException e) {
+                  } catch (JacksonException e) {
                     throw new RuntimeException(e);
                   }
                 })
